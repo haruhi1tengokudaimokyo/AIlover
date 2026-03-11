@@ -10,8 +10,8 @@ import SearchIcon from "@/components/navbar/Icon/SearchIcon.vue";
 <template>
   <div class="drawer lg:drawer-open">
     <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <dive class="navbar w-full bg-base-100 shadow-sm">
+    <div class="drawer-content flex flex-col min-h-screen">
+      <div class="navbar w-full bg-base-100 shadow-sm">
         <div class="navbar-start">
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
             <MenuIcon />
@@ -27,15 +27,16 @@ import SearchIcon from "@/components/navbar/Icon/SearchIcon.vue";
               </button>
             </div>
         </div>
-        <div class="navbar-end">
-          <RouterLink :to="{name:'user-account-login-index'}" active-class = 'btn-active' class="btn btn-ghost text-lg">
-            登录
-          </RouterLink>
+          <div class="navbar-end">
+            <RouterLink :to="{name:'user-account-login-index'}" active-class = 'btn-active' class="btn btn-ghost text-lg">
+              登录
+            </RouterLink>
+          </div>
         </div>
 
-        <!-- Page content here -->
-        <slot></slot>
-      </dive>
+      <slot></slot>
+
+
     </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible">
