@@ -13,6 +13,9 @@
       <input type="password" class="input" placeholder="密码" />
 
       <button class="btn btn-neutral mt-4">登录</button>
+      <div class = 'flex justify-end'>
+        <RouterLink :to="{name: 'user-account-register-index'}" class = "btn btn-sn btn-ghost text-gray-500">注册</RouterLink>
+      </div>
     </fieldset>
   </div>
 </template>
