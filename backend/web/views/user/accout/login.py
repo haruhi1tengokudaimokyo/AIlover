@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate
-from rest_framework import status
+from platform import mac_ver
+
+from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -18,7 +20,7 @@ class LoginView(APIView):
                 })
             user = authenticate(username=username, password=password)
             if user:  #用户名密码正确
-                user_profile = UserProfile.objects.get(username=username)
+                user_profile = UserProfile.objects.get(user=user)
                 refresh = RefreshToken.for_user(user) #生成jwt
                 response = Response({
                     'result': 'success',
