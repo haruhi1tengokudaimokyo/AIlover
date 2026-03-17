@@ -27,7 +27,7 @@ class UpdateProfileView(APIView):
                 return Response({
                     'result': '简介不能为空'
                 })
-            if username != user.username and User.objects.get(username=username).exists():
+            if username != user.username and User.objects.filter(username=username).exists():
                 return Response({
                     'result' : '用户名已存在'
                 })
