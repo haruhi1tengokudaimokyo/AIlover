@@ -1,4 +1,4 @@
-from rest_framework import status
+from django.utils.termcolors import background
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +13,7 @@ class CreateCharacterView(APIView):
         try:
             user = request.user
             user_profile = UserProfile.objects.get(user=user)
-            name = request.data.get('name')
+            name = request.data.get('name').strip()
             profile = request.data.get('profile').strip()[:100000]
             photo = request.FILES.get('photo',None)
             background_image = request.FILES.get('background_image',None)
@@ -47,5 +47,5 @@ class CreateCharacterView(APIView):
             })
         except:
             return Response({
-                'result': '系统异常，请稍后重试'
-            })
+                 'result':'系统异常，请稍后再试'
+             })

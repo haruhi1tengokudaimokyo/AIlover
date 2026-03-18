@@ -18,9 +18,9 @@ def background_image_upload_to(instance, filename):
 class Character(models.Model):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    photo = models.ImageField(upload_to='character/photo')
+    photo = models.ImageField(upload_to=photo_upload_to)
     profile = models.TextField(max_length=100000)
-    background = models.ImageField(upload_to=photo_upload_to)
+    background_image = models.ImageField(upload_to=background_image_upload_to)
     create_time = models.DateTimeField(default=now)
     update_time = models.DateTimeField(default=now)
 
