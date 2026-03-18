@@ -39,6 +39,14 @@ const router = createRouter({
       },
     },
     {
+    path:'/create/character/update/:character_id/',
+    component:UpdateCharacter,
+    name:'update-character',
+    meta:{
+      needLogin: true,
+    }
+},
+    {
       path: '/404/',
       component: NotFoundIndex,
       name: '404',
