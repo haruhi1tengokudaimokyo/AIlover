@@ -35,7 +35,7 @@ onMounted(async () => {
 const photoRef = useTemplateRef('photo-ref') //四个引用
 const nameRef = useTemplateRef('name-ref')
 const profileRef = useTemplateRef('profile-ref')
-const backgroundImageRef = useTemplateRef('backgroundImage-ref')
+const backgroundImageRef = useTemplateRef('background-image-ref')
 const errorMessage =ref('')
 
 //对接后端的函数
@@ -65,7 +65,7 @@ async function handleUpdate(){
     }
 
     if (backgroundImage !== character.value.background_image){
-    formData.append('background_image',base64ToFile(backgroundImage,'backgroundImage.png')) //key与`/api/create/character/create/`的变量一致
+    formData.append('background_image',base64ToFile(backgroundImage,'background_image.png')) //key与`/api/create/character/create/`的变量一致
     }
 
     try{
@@ -97,7 +97,7 @@ async function handleUpdate(){
         <Photo ref="photo-ref" :photo="character.photo"/>
         <Name ref="name-ref" :name="character.name"/>
         <Profile ref="profile-ref" :profile="character.profile"/>
-        <BackgroundImage ref="backgroundImage-ref" :backgroundImage="character.background_image"/>
+        <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image"/>
 
         <p v-if="errorMessage" class="text-sm text-red-500">{{errorMessage}}</p>
 

@@ -40,7 +40,7 @@ const router = createRouter({
     },
     {
     path:'/create/character/update/:character_id/',
-    component:UpdateCharacter,
+    component:'UpdateCharacter',
     name:'update-character',
     meta:{
       needLogin: true,
