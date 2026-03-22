@@ -44,8 +44,6 @@ async function handleCreate(){
       const res = await api.post('/api/create/character/create/', formData)
       const data = res.data
 
-      console.log('后端返回:', data) //调试
-
       if (data.result === 'success') {
         await router.push({
           name:'user-space-index',
@@ -58,7 +56,6 @@ async function handleCreate(){
       }
 
     } catch (err) {
-      console.log(err)
     }
 
   }

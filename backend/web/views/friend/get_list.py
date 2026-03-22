@@ -14,10 +14,12 @@ class GetListFriendView(APIView):
                 me__user=request.user
             ).order_by('-update_time')[items_count: items_count + 20]
             friends = []
-            for friend in friens_raw:
+            for friend in friends_raw:
                 character = friend.character
                 author = character.author
                 friends.append({
+                    'id': character.id,
+                    'character':{
                     'id': character.id,
                     'name': character.name,
                     'profile': character.profile,
@@ -28,7 +30,8 @@ class GetListFriendView(APIView):
                         'username': author.user.username,
                         'photo': author.photo.url,
                     }
-                })
+                }
+            })
             return Response({
                 'result': 'success',
                 'friends': friends,
