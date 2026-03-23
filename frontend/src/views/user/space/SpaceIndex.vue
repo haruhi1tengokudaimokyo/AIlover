@@ -1,6 +1,6 @@
 <script setup lang="js">
 
-import {nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef} from "vue";
+import {nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch} from "vue";
 import UserInfoField from "@/views/user/space/components/UserInfoField.vue";
 import api from "@/js/http/api.js";
 import {useRoute} from "vue-router";
@@ -12,6 +12,18 @@ const isLoading = ref(false)
 const hasCharacters = ref(true)
 const sentinelRef = useTemplateRef('sentinel-ref')
 const route = useRoute()
+
+function reset() {
+  userProfile.value = null
+  characters.value = []
+  isLoading.value = false
+  hasCharacters.value = true
+  loadMore()
+}
+
+watch(() => route.params.user_id, () => {
+  reset()
+})
 
 function checkSentinelVisible() {  // 判断哨兵是否能被看到
   if (!sentinelRef.value) return false
