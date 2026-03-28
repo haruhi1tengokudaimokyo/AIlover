@@ -24,7 +24,7 @@ def add_system_prompt(state, friend):
     system_prompts = SystemPrompt.objects.filter(title='回复').order_by('order_number')
     prompt = ''
     for sp in system_prompts:
-        prompt += sp.prompt
+        prompt += sp.prompts
     prompt += f'\n【角色性格】\n{friend.character.profile}'
     prompt += f'【长期记忆】\n{friend.memory}\n'
     return {'messages': [SystemMessage(prompt)] + msgs}
