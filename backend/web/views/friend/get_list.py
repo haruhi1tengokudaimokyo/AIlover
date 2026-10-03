@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from web.models.friend import Friend
+from web.views.friend.get_or_create import _character_payload
 
 
 class GetListFriendView(APIView):
@@ -16,21 +17,9 @@ class GetListFriendView(APIView):
             friends = []
             for friend in friends_raw:
                 character = friend.character
-                author = character.author
                 friends.append({
                     'id': character.id,
-                    'character':{
-                    'id': character.id,
-                    'name': character.name,
-                    'profile': character.profile,
-                    'photo': character.photo.url,
-                    'background_image': character.background_image.url,
-                    'author': {
-                        'user_id': author.user_id,
-                        'username': author.user.username,
-                        'photo': author.photo.url,
-                    }
-                }
+                    'character': _character_payload(character),
             })
             return Response({
                 'result': 'success',

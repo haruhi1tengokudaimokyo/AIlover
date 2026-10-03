@@ -9,7 +9,7 @@ const isSpeaking = ref(false)
 let vadInstance = null;
 
 const startRecording = async () => {
-  const baseUrl = "http://127.0.0.1:8000/static/frontend/vad/";
+  const baseUrl = "/static/frontend/vad/";
   try {
     vadInstance = await MicVAD.new({
       baseAssetPath: baseUrl,

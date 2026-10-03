@@ -11,9 +11,10 @@ class MemoryGraph:
     @staticmethod
     def create_app():
         llm = ChatOpenAI(
-            model='deepseek-v3.2',
+            model=os.getenv('MODEL', 'deepseek-v3.2'),
             openai_api_key=os.getenv('API_KEY'),
             openai_api_base=os.getenv('API_BASE'),
+            temperature=0.3,  # 记忆摘要需要稳定，不要发挥
         )
 
         class AgentState(TypedDict):

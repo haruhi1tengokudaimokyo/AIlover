@@ -49,6 +49,10 @@ function handlePushFrontMessage(msq) {
   history.value.unshift(msq)
 }
 
+function handleQuickReply(text) {
+  inputRef.value.sendQuick(text)
+}
+
 defineExpose({
   showModal,
 })
@@ -65,6 +69,8 @@ defineExpose({
           :friendId="friend.id"
           :character="friend.character"
           @pushFrontMessage="handlePushFrontMessage"
+          @pushBackMessage="handlePushBackMessage"
+          @quickReply="handleQuickReply"
       />
       <InputField
           v-if="friend"

@@ -4,6 +4,29 @@ from rest_framework.permissions import IsAuthenticated
 
 from web.models.friend import Friend
 from web.models.user import UserProfile
+import json
+
+
+def _character_payload(character):
+    try:
+        quick_replies = json.loads(character.quick_replies or '[]')
+    except (ValueError, TypeError):
+        quick_replies = []
+    author = character.author
+    return {
+        'id': character.id,
+        'name': character.name,
+        'profile': character.profile,
+        'greeting': character.greeting or '',
+        'quick_replies': quick_replies,
+        'photo': character.photo.url,
+        'background_image': character.background_image.url,
+        'author': {
+            'user_id': author.user_id,
+            'username': author.user.username,
+            'photo': author.photo.url,
+        }
+    }
 
 
 class GetOrCreateFriendView(APIView):
@@ -19,23 +42,11 @@ class GetOrCreateFriendView(APIView):
             else:
                 friend = Friend.objects.create(character_id=character_id, me=user_profile)
             character = friend.character
-            author = character.author
             return Response({
                 'result': 'success',
                 'friend':{
                     'id': friend.id,
-                    'character': {
-                    'id': character_id,
-                    'name': character.name,
-                    'profile': character.profile,
-                    'photo': character.photo.url,
-                    'background_image': character.background_image.url,
-                    'author': {
-                        'user_id': author.user_id,
-                        'username': author.user.username,
-                        'photo': author.photo.url,
-                    }
-                }
+                    'character': _character_payload(character),
             }
         })
         except:

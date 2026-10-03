@@ -16,9 +16,9 @@ class Friend(models.Model):
 
 class Message(models.Model):
     friend = models.ForeignKey(Friend, on_delete=models.CASCADE)
-    user_message = models.TextField(max_length=500)
-    input = models.TextField(max_length=10000)
-    output = models.TextField(max_length=500)
+    user_message = models.TextField(max_length=2000)
+    input = models.TextField(max_length=20000)
+    output = models.TextField(max_length=5000)
     input_tokens = models.IntegerField(default=0)
     output_tokens = models.IntegerField(default=0)
     total_tokens = models.IntegerField(default=0)
@@ -30,9 +30,9 @@ class Message(models.Model):
 class SystemPrompt(models.Model):
     title = models.CharField(max_length=100)
     order_number = models.IntegerField(default=0)
-    prompts = models.TextField(max_length=10000)
+    prompt = models.TextField(max_length=10000)
     create_time = models.DateTimeField(default=now)
     update_time = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"{self.title} - {self.order_number} - {self.prompts[:50]} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.title} - {self.order_number} - {self.prompt[:50]} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"

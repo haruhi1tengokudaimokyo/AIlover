@@ -1,11 +1,11 @@
 <script setup lang="js">
 import Message from "@/components/character/chat_field/chat_history/message/Message.vue";
-import {nextTick, onBeforeUnmount, onMounted, useTemplateRef} from "vue";
+import {computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef} from "vue";
 import api from "@/js/http/api.js";
 
 const props = defineProps(['history','friendId','character'])
 const scrollRef = useTemplateRef('scroll-ref')
-const emit = defineEmits(["pushFrontMessage"]);
+const emit = defineEmits(["pushFrontMessage", "pushBackMessage", "quickReply"]);
 const sentinelRef = useTemplateRef('sentinel-ref')
 let isLoading = false
 let hasMessages = true
@@ -76,6 +76,15 @@ let observer = null
 onMounted(async () => {
   await loadMore()
 
+  // 首次添加好友（无任何聊天记录）时，展示角色开场白
+  if (props.history.length === 0 && props.character?.greeting) {
+    emit('pushBackMessage', {
+      role: 'ai',
+      content: props.character.greeting,
+      id: crypto.randomUUID(),
+    })
+  }
+
   observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -92,6 +101,17 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   observer?.disconnect()
 })
+
+// 快捷话题：仅在还没有任何用户发言时展示（开场白阶段）
+const showQuickReplies = computed(() => {
+  const replies = props.character?.quick_replies
+  if (!Array.isArray(replies) || replies.length === 0) return false
+  return !props.history.some(m => m.role === 'user')
+})
+
+function handleQuickReply(text) {
+  emit('quickReply', text)
+}
 
 async function scrollToBottom(){
   await nextTick()
@@ -115,6 +135,18 @@ defineExpose({
 
     />
 
+  </div>
+
+  <!-- 快捷话题气泡：开场白阶段引导用户开口 -->
+  <div v-if="showQuickReplies" class="absolute bottom-20 left-2 w-86 flex flex-col items-end gap-2">
+    <button
+        v-for="(text, i) in character.quick_replies"
+        :key="i"
+        @click="handleQuickReply(text)"
+        class="max-w-full text-left text-sm text-white bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-2 hover:bg-black/50 transition-colors"
+    >
+      {{ text }}
+    </button>
   </div>
 
 </template>

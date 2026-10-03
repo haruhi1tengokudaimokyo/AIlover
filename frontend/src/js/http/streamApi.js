@@ -9,7 +9,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { useUserStore } from "@/stores/user.js";
 import api from "./api.js";
 
-const BASE_URL = 'http://127.0.0.1:8000'
+const BASE_URL = ''
 
 /**
  * 通用的流式请求工具

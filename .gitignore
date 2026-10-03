@@ -9,3 +9,12 @@ static/
 backend/web/documents/data.txt
 backend/web/documents/lancedb_storage/
 frontend/public/vad/
+# 游戏本体与提取出的大体积版权资源（仅本地个人学习使用，不入库）
+国王恋爱/
+extracted/voice/
+extracted/stimage/
+extracted/sprites/
+extracted/scenario_all/
+backend/lancedb_style/
+.venv/
+dist/

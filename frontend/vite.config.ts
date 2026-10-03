@@ -16,6 +16,13 @@ export default defineConfig({
     outDir: path.resolve(__dirname, '../backend/static/frontend'), // 打包到 Django static
     emptyOutDir: true,
   },
+  // 前端已改为同源相对地址请求；开发模式下把 /api 和 /media 代理到 Django
+  server: {
+    proxy: {
+      '/api': 'http://127.0.0.1:8000',
+      '/media': 'http://127.0.0.1:8000',
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

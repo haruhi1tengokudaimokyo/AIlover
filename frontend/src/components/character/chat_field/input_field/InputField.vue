@@ -152,9 +152,17 @@ function handleStop() {
   stopAudio()
 }
 
+// 快捷话题：直接把话题文本作为用户消息发送
+function sendQuick(text) {
+  if (!text || !text.trim()) return
+  message.value = text
+  handleSend()
+}
+
 defineExpose({
   focus,
   close,
+  sendQuick,
 })
 </script>
 
