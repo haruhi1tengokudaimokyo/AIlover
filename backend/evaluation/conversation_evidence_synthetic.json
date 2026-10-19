@@ -1,0 +1,9 @@
+{
+  "synthetic": true,
+  "notice": "Invented material for pipeline ablations, never original-game lore.",
+  "records": [
+    {"id":"synthetic-kitchen","character":"synthetic","text":"合成世界的料理在台所准备。","keywords":["料理","厨房","做饭"],"source_file":"synthetic.ks","source_location":{"line_start":1},"scene_id":"synthetic-kitchen","route_id":null,"evidence_type":"lore","reviewed":true},
+    {"id":"synthetic-concern","character":"synthetic","text":"疲れたの？今日は休んでね。","keywords":["累","工作","担心"],"source_file":"synthetic.ks","source_location":{"line_start":2},"scene_id":"synthetic-room","route_id":null,"evidence_type":"style","context":[{"id":"synthetic-user","speaker":"user","text":"仕事で疲れた。"}]},
+    {"id":"synthetic-food-style","character":"synthetic","text":"ご飯の準備をしよう。何を食べたい？","keywords":["吃","饭","料理"],"source_file":"synthetic.ks","source_location":{"line_start":3},"scene_id":"synthetic-kitchen","route_id":null,"evidence_type":"style","context":[{"id":"synthetic-hunger","speaker":"user","text":"お腹が空いた。"}]}
+  ]
+}

@@ -5,6 +5,7 @@ import UserProfileIcon from "@/components/navbar/Icon/UserProfileIcon.vue";
 import UserLogoutIcon from "@/components/navbar/Icon/UserLogoutIcon.vue";
 import api from '@/js/http/api.js';
 import {useRouter} from "vue-router";
+import {avatarFallback} from '@/js/utils/avatar.js';
 
 const user = useUserStore()
 const router = useRouter()
@@ -31,7 +32,7 @@ async function handleLogout() {
   <div class="dropdown dropdown-end">
     <div tabindex="0" role="button" class="avatar btn btn-circle w-8 h-8 mr-6">
       <div class="w-8 rounded-full">
-        <img :src="user.photo" alt="">
+        <img :src="user.photo" @error="avatarFallback" alt="用户头像">
       </div>
     </div>
     <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-48 p-2 shadow-lg">
@@ -39,7 +40,7 @@ async function handleLogout() {
         <RouterLink @click=closeMenu :to="{name: 'user-space-index', params:{user_id:user.id}}">
           <div class="avatar">
             <div class="w-10 rounded-full">
-              <img :src="user.photo" alt="">
+              <img :src="user.photo" @error="avatarFallback" alt="用户头像">
             </div>
           </div>
           <span class="text-base font-bold line-clamp-1 break-all">{{user.username}}</span>

@@ -125,7 +125,7 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="scroll-ref" class="absolute top-18 left-0 w-90 h-112 overflow-y-scroll no-scrollbar">
+  <div ref="scroll-ref" class="absolute top-20 bottom-20 left-0 w-full overflow-y-scroll no-scrollbar">
     <div ref="sentinel-ref" class="h-2"></div>
     <Message
         v-for="message in history"
@@ -138,7 +138,7 @@ defineExpose({
   </div>
 
   <!-- 快捷话题气泡：开场白阶段引导用户开口 -->
-  <div v-if="showQuickReplies" class="absolute bottom-20 left-2 w-86 flex flex-col items-end gap-2">
+  <div v-if="showQuickReplies" class="absolute bottom-20 left-2 right-2 flex flex-col items-end gap-2">
     <button
         v-for="(text, i) in character.quick_replies"
         :key="i"

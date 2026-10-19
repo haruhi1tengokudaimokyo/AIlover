@@ -89,6 +89,8 @@ class Command(BaseCommand):
         import os
         for card_path in sorted(cards_dir.glob('*.json')):
             card = json.loads(card_path.read_text(encoding='utf-8'))
+            if 'slug' not in card:
+                continue
             slug = card['slug']
             character, created = Character.objects.get_or_create(
                 author=profile, name=card['name'],

@@ -1,0 +1,768 @@
+{
+  "synthetic": true,
+  "k": 4,
+  "dense_provider": "deterministic_mock",
+  "strategies": {
+    "legacy": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 0.75,
+        "ndcg_at_k": 0.8132194378880441,
+        "irrelevant_injection": 1.0,
+        "latency_ms": 0.04929999995511025
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook",
+            "l-route-a",
+            "l-friend",
+            "l-route-b"
+          ],
+          "trace": null,
+          "latency_ms": 0.15500000154133886,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-route-b",
+            "l-friend",
+            "l-route-a",
+            "s-worry"
+          ],
+          "trace": null,
+          "latency_ms": 0.04230000195093453,
+          "recall_at_k": 1.0,
+          "mrr": 0.5,
+          "ndcg_at_k": 0.6309297535714575,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "trace": null,
+          "latency_ms": 0.017799997294787318,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry",
+            "l-friend",
+            "l-route-a",
+            "l-route-b"
+          ],
+          "trace": null,
+          "latency_ms": 0.04479999915929511,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend",
+            "l-route-a",
+            "l-cook",
+            "l-route-b"
+          ],
+          "trace": null,
+          "latency_ms": 0.04169999738223851,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [
+            "l-route-a",
+            "l-route-b",
+            "l-friend",
+            "l-cook"
+          ],
+          "trace": null,
+          "latency_ms": 0.03440000000409782,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-cook",
+            "l-route-b",
+            "s-worry",
+            "l-route-a"
+          ],
+          "trace": null,
+          "latency_ms": 0.03409999771974981,
+          "recall_at_k": 1.0,
+          "mrr": 0.25,
+          "ndcg_at_k": 0.43067655807339306,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [
+            "l-cook",
+            "l-route-b",
+            "s-worry",
+            "l-route-a"
+          ],
+          "trace": null,
+          "latency_ms": 0.03470000228844583,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [
+            "l-cook",
+            "s-worry",
+            "l-friend",
+            "l-route-a"
+          ],
+          "trace": null,
+          "latency_ms": 0.040599996282253414,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "s-worry",
+            "l-route-a",
+            "l-friend",
+            "l-cook"
+          ],
+          "trace": null,
+          "latency_ms": 0.04760000592796132,
+          "recall_at_k": 1.0,
+          "mrr": 0.5,
+          "ndcg_at_k": 0.6309297535714575,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "sparse": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 1.6543199999432545
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-cook"
+            ],
+            "latency_ms": 7.97
+          },
+          "latency_ms": 8.002100003068335,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.502
+          },
+          "latency_ms": 0.5171000011614524,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-nova"
+            ],
+            "latency_ms": 0.428
+          },
+          "latency_ms": 0.4381000035209581,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "trace": {
+            "channel": "style",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "s-worry"
+            ],
+            "latency_ms": 4.445
+          },
+          "latency_ms": 4.498499998589978,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.556
+          },
+          "latency_ms": 0.5710999976145104,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [],
+            "latency_ms": 0.505
+          },
+          "latency_ms": 0.5174999969312921,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.461
+          },
+          "latency_ms": 0.4717999981949106,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [],
+            "latency_ms": 0.504
+          },
+          "latency_ms": 0.5154000027687289,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [],
+            "latency_ms": 0.509
+          },
+          "latency_ms": 0.5193999968469143,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "sparse",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.482
+          },
+          "latency_ms": 0.49220000073546544,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "dense": {
+      "aggregate": {
+        "recall_at_k": 0.8571428571428571,
+        "mrr": 0.8571428571428571,
+        "ndcg_at_k": 0.8571428571428571,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 0.45897000018157996
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.508
+          },
+          "latency_ms": 0.5182000022614375,
+          "recall_at_k": 0.0,
+          "mrr": 0,
+          "ndcg_at_k": 0.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.44
+          },
+          "latency_ms": 0.44979999802308157,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "l-nova"
+            ],
+            "latency_ms": 0.458
+          },
+          "latency_ms": 0.46750000183237717,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "trace": {
+            "channel": "style",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "s-worry"
+            ],
+            "latency_ms": 0.414
+          },
+          "latency_ms": 0.42209999810438603,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.383
+          },
+          "latency_ms": 0.4773999971803278,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.505
+          },
+          "latency_ms": 0.5155000035301782,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.41
+          },
+          "latency_ms": 0.4195000001345761,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.416
+          },
+          "latency_ms": 0.42410000605741516,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.433
+          },
+          "latency_ms": 0.4413999995449558,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "dense",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.445
+          },
+          "latency_ms": 0.45419999514706433,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "hybrid": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 0.4051500007335562
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "degraded",
+            "hit_ids": [
+              "l-cook"
+            ],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.444
+          },
+          "latency_ms": 0.45620000310009345,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.438
+          },
+          "latency_ms": 0.447600003099069,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "l-nova"
+            ],
+            "latency_ms": 0.381
+          },
+          "latency_ms": 0.38979999953880906,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "trace": {
+            "channel": "style",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "s-worry"
+            ],
+            "latency_ms": 0.437
+          },
+          "latency_ms": 0.4456000024219975,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "l-friend"
+            ],
+            "latency_ms": 0.39
+          },
+          "latency_ms": 0.3982999987783842,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.378
+          },
+          "latency_ms": 0.3862000012304634,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.391
+          },
+          "latency_ms": 0.39929999911691993,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.364
+          },
+          "latency_ms": 0.3708000003825873,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "degraded",
+            "hit_ids": [],
+            "reason": "dense_empty_or_missing",
+            "latency_ms": 0.388
+          },
+          "latency_ms": 0.39570000080857426,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "trace": {
+            "channel": "lore",
+            "strategy": "hybrid",
+            "status": "ok",
+            "hit_ids": [
+              "l-route-a"
+            ],
+            "latency_ms": 0.355
+          },
+          "latency_ms": 0.3619999988586642,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    }
+  },
+  "dense_fallback": false,
+  "note": "Dense-only has no sparse fallback in evaluation."
+}

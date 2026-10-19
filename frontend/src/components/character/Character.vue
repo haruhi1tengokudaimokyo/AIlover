@@ -6,6 +6,7 @@ import RemoveIcon from "@/components/character/icons/RemoveIcon.vue";
 import api from "@/js/http/api.js";
 import ChatField from "@/components/character/chat_field/ChatField.vue";
 import router from "@/router/index.js";
+import {avatarFallback} from '@/js/utils/avatar.js';
 
 const props = defineProps(['character','canEdit', 'canRemoveFriend', 'friendId'])
 const emits = defineEmits(['remove'])
@@ -13,6 +14,7 @@ const isHover = ref(false)
 const user = useUserStore()
 
 async function handleRemoveCharacter() {
+  if (!window.confirm('删除这个角色及关联聊天？此操作无法撤销，请先备份。')) return
   try {
     const res = await api.post('/api/create/character/remove/',{
       character_id: props.character.id,
@@ -25,6 +27,7 @@ async function handleRemoveCharacter() {
 }
 
 async function handleRemoveFriend() {
+  if (!window.confirm('移除这个好友并删除关联聊天和记忆？此操作无法撤销，请先导出。')) return
   try {
     const res = await api.post('/api/friend/remove/',{
       friend_id: props.friendId,
@@ -71,7 +74,7 @@ async function openChatField() {
           <RouterLink @click.stop :to="{name:'update-character',params:{character_id:character.id}}" class="btn btn-circle btn-ghost bg-transparent">
             <UpdateIcon />
           </RouterLink>
-          <button @click="handleRemoveCharacter" class="btn btn-circle btn-ghost bg-transparent">
+          <button @click.stop="handleRemoveCharacter" class="btn btn-circle btn-ghost bg-transparent">
             <RemoveIcon/>
           </button>
         </div>
@@ -98,7 +101,7 @@ async function openChatField() {
     <RouterLink :to="{name:'user-space-index',params:{user_id:character.author.user_id}}" class="flex items-center mt-4 gap-2">
       <div class="avatar">
         <div class="w-7 rounded-full">
-          <img :src="character.author.photo" alt="">>
+          <img :src="character.author.photo" @error="avatarFallback" alt="作者头像">
         </div>
       </div>
       <div class="text-sm line-clamp-1 break-all">{{character.author.username}}</div>

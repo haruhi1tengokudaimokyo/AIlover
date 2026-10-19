@@ -15,6 +15,8 @@ class MemoryGraph:
             openai_api_key=os.getenv('API_KEY'),
             openai_api_base=os.getenv('API_BASE'),
             temperature=0.3,  # 记忆摘要需要稳定，不要发挥
+            timeout=45,
+            max_retries=1,
         )
 
         class AgentState(TypedDict):

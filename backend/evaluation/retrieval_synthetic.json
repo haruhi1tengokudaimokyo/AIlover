@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "synthetic": true,
+  "notice": "Invented fixture; no claims about the game's canon or real embeddings.",
+  "records": [
+    {"id":"l-cook","text":"料理は台所で作ります。","character":"luna","keywords":["厨房","料理"],"evidence_type":"lore","source_file":"synthetic.ks","source_location":{"line_start":1},"route_id":null,"scene_id":"kitchen"},
+    {"id":"l-friend","text":"ルナとノヴァは友達です。","character":"luna","keywords":["露娜","诺娃","朋友","关系"],"evidence_type":"lore","source_file":"synthetic.ks","source_location":{"line_start":2},"route_id":null,"scene_id":"kitchen"},
+    {"id":"s-worry","text":"疲れたの？今日は休んでね。","character":"luna","keywords":["担心","累"],"evidence_type":"style","source_file":"synthetic.ks","source_location":{"line_start":3},"route_id":null,"scene_id":"kitchen","context":[{"id":"synthetic-user","speaker":"user","text":"仕事で疲れた。"}]},
+    {"id":"l-nova","text":"ノヴァは時計を修理します。","character":"nova","keywords":["修理","朋友"],"evidence_type":"lore","source_file":"synthetic.ks","source_location":{"line_start":4},"route_id":null,"scene_id":"workshop"},
+    {"id":"l-route-a","text":"赤い鍵は塔にあります。","character":"luna","keywords":["红钥匙","塔"],"evidence_type":"lore","source_file":"synthetic.ks","source_location":{"line_start":5},"route_id":"a","scene_id":"tower"},
+    {"id":"l-route-b","text":"赤い鍵は庭にあります。","character":"luna","keywords":["红钥匙","花园"],"evidence_type":"lore","source_file":"synthetic.ks","source_location":{"line_start":6},"route_id":"b","scene_id":"garden"}
+  ],
+  "cases": [
+    {"id":"cross_language","character":"luna","channel":"lore","query":"做饭需要去哪里？","gold":["l-cook"]},
+    {"id":"relationship","character":"luna","channel":"lore","query":"露娜和诺娃的关系？","gold":["l-friend"]},
+    {"id":"fact","character":"nova","channel":"lore","query":"谁会修理時計？","gold":["l-nova"]},
+    {"id":"style","character":"luna","channel":"style","query":"工作好累，担心我吗？","gold":["s-worry"]},
+    {"id":"ambiguity","character":"luna","channel":"lore","query":"朋友","gold":["l-friend"]},
+    {"id":"irrelevant","character":"luna","channel":"lore","query":"量子色动力学公式","gold":[]},
+    {"id":"branch_conflict","character":"luna","channel":"lore","query":"红钥匙","filters":{"route_id":"a"},"gold":["l-route-a"]},
+    {"id":"unknown_route","character":"luna","channel":"lore","query":"红钥匙","gold":[]},
+    {"id":"scene_conflict","character":"luna","channel":"lore","query":"厨房","filters":{"scene_id":"workshop"},"gold":[]},
+    {"id":"short_cjk","character":"luna","channel":"lore","query":"塔","filters":{"route_id":"a"},"gold":["l-route-a"]}
+  ]
+}

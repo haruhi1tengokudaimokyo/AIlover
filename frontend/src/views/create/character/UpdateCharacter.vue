@@ -15,6 +15,9 @@ const router = useRouter()
 const route = useRoute()
 const characterId = route.params.character_id
 const character = ref(null)
+const voice = ref('')
+const greeting = ref('')
+const quickReplies = ref('')
 
 onMounted(async () => {
   try{
@@ -26,6 +29,9 @@ onMounted(async () => {
     const data = res.data
     if(data.result === 'success'){
       character.value = data.character
+      voice.value = data.character.voice || ''
+      greeting.value = data.character.greeting || ''
+      quickReplies.value = JSON.parse(data.character.quick_replies || '[]').join('\n')
     }
   } catch (err){
   }
@@ -58,6 +64,9 @@ async function handleUpdate(){
     formData.append('character_id',characterId)
     formData.append('name',name)
     formData.append('profile',profile)
+    formData.append('voice', voice.value.trim())
+    formData.append('greeting', greeting.value.trim())
+    formData.append('quick_replies', JSON.stringify(quickReplies.value.split('\n').map(text => text.trim()).filter(Boolean)))
 
     if (photo !== character.value.photo){
       formData.append('photo',base64ToFile(photo,'photo.png'))
@@ -82,6 +91,7 @@ async function handleUpdate(){
       }
 
     }catch (err){
+      errorMessage.value = err.response?.data?.result || '更新失败，请重试'
     }
   }
 }
@@ -95,6 +105,9 @@ async function handleUpdate(){
         <Photo ref="photo-ref" :photo="character.photo"/>
         <Name ref="name-ref" :name="character.name"/>
         <Profile ref="profile-ref" :profile="character.profile"/>
+        <label class="text-sm">音色 ID<input v-model="voice" maxlength="100" class="input w-full" placeholder="填写语音服务提供的音色 ID"></label>
+        <label class="text-sm">开场白<textarea v-model="greeting" maxlength="2000" rows="3" class="textarea w-full"></textarea></label>
+        <label class="text-sm">快捷话题（每行一条，最多10条）<textarea v-model="quickReplies" rows="3" class="textarea w-full"></textarea></label>
         <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image"/>
 
         <p v-if="errorMessage" class="text-sm text-red-500">{{errorMessage}}</p>

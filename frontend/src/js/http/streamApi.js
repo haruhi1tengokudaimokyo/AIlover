@@ -18,6 +18,8 @@ const BASE_URL = ''
  */
 export default async function streamApi(url, options = {}) {
     const userStore = useUserStore();
+    let refreshed = false;
+    let done = false;
 
     const startFetch = async () => {
         return await fetchEventSource(BASE_URL + url, {
@@ -30,28 +32,26 @@ export default async function streamApi(url, options = {}) {
             body: JSON.stringify(options.body || {}),
 
             openWhenHidden: true,  // 允许后台运行，防止浏览器因隐藏页面而强制关闭它
+            signal: options.signal,
             async onopen(response) {
                 // 1. 处理 401 Token 过期
                 if (response.status === 401) {
-                    try {
-                        // 触发 api.js 中的 Axios 拦截器进行静默刷新
-                        await api.post('/api/user/account/refresh_token/', {});
-                        // 抛出特定错误触发下面的 onerror 重试逻辑
-                        throw new Error("TOKEN_REFRESHED");
-                    } catch (err) {
-                        // 如果刷新失败（refresh_token也过期），直接报错由上层处理
-                        throw err;
-                    }
+                    if (refreshed) throw new Error('登录已失效，请重新登录');
+                    const res = await api.post('/api/user/account/refresh_token/', {}, { _retry: true });
+                    userStore.setAccessToken(res.data.access);
+                    refreshed = true;
+                    throw new Error('TOKEN_REFRESHED');
                 }
 
                 if (!response.ok || !response.headers.get('content-type')?.includes('text/event-stream')) {
                     const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.detail || `请求失败: ${response.status}`);
+                    throw new Error(errorData.result || errorData.detail || `请求失败: ${response.status}`);
                 }
             },
 
             onmessage(msg) {
                 if (msg.data === '[DONE]') {
+                    done = true;
                     if (options.onmessage) options.onmessage('', true);
                     return
                 }
@@ -66,7 +66,7 @@ export default async function streamApi(url, options = {}) {
             onerror(err) {
                 // 2. 捕获重试信号并递归
                 if (err.message === "TOKEN_REFRESHED") {
-                    return startFetch();
+                    throw err;
                 }
 
                 // 其他错误则按用户定义的 onerror 处理
@@ -76,9 +76,17 @@ export default async function streamApi(url, options = {}) {
                 throw err; // 停止自动重试
             },
 
-            onclose: options.onclose,
+            onclose() {
+                if (!done) throw new Error('连接中断，回复未完成，请重试');
+                options.onclose?.();
+            },
         });
     };
 
-    return await startFetch();
+    try {
+        return await startFetch();
+    } catch (err) {
+        if (err.message === 'TOKEN_REFRESHED') return await startFetch();
+        throw err;
+    }
 }

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.utils.timezone import now, localtime
 from langchain_core.tools import tool
 from langchain_core.messages import BaseMessage
+from langchain_core.runnables import RunnableLambda
 from langchain_openai import ChatOpenAI
 from langgraph.constants import START, END
 from langgraph.graph import add_messages, StateGraph
@@ -51,11 +52,14 @@ class ChatGraph:
     def create_app():
         tools = _build_tools()
 
-        llm = ChatOpenAI(
+        owned_model = ChatOpenAI(
             model=os.getenv('MODEL', 'deepseek-v3.2'),
             openai_api_key=os.getenv('API_KEY'),
             openai_api_base=os.getenv('API_BASE'),
             streaming=True,
+            timeout=45,
+            max_retries=1,
+            max_tokens=1000,
             # 角色扮演场景：略高的温度让回复更有「人味」，
             # 频率惩罚抑制复读与套话（原来默认全为 0，容易复读）
             temperature=float(os.getenv('LLM_TEMPERATURE', '0.95')),
@@ -67,13 +71,20 @@ class ChatGraph:
                     "include_usage": True,  # 输出token消耗数量
                 }
             }
-        ).bind_tools(tools)
+        )
+        llm = owned_model.bind_tools(tools)
 
         class AgentState(TypedDict):
             messages: Annotated[Sequence[BaseMessage], add_messages]
 
         def model_call(state: AgentState) -> AgentState:
             res = llm.invoke(state['messages'])
+            return {'messages': [res]}
+
+        async def async_model_call(state: AgentState) -> AgentState:
+            # Stream/cancel through AsyncOpenAI instead of blocking an executor
+            # thread whose HTTP request could survive task cancellation.
+            res = await llm.ainvoke(state['messages'])
             return {'messages': [res]}
 
         def should_continue(state: AgentState) -> str:
@@ -85,7 +96,7 @@ class ChatGraph:
         tool_node = ToolNode(tools)
 
         graph = StateGraph(AgentState)
-        graph.add_node('agent', model_call)
+        graph.add_node('agent', RunnableLambda(model_call, afunc=async_model_call))
         graph.add_node('tools', tool_node)
 
         graph.add_edge(START, 'agent')
@@ -99,4 +110,20 @@ class ChatGraph:
         )
         graph.add_edge('tools', 'agent')
 
-        return graph.compile()
+        app = graph.compile()
+        app._ailover_owned_model = owned_model
+        return app
+
+    @staticmethod
+    async def close_app(app):
+        model = getattr(app, '__dict__', {}).get('_ailover_owned_model')
+        if model is None:
+            return
+        try:
+            client = getattr(model, 'root_async_client', None)
+            if client is not None:
+                await client.close()
+        finally:
+            client = getattr(model, 'root_client', None)
+            if client is not None:
+                client.close()

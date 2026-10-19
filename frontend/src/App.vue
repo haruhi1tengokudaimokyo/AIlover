@@ -19,7 +19,7 @@ onMounted(async() => {
   }catch(err) {
   } finally {
     user.setHasPulledUserInfo(true)
-    if(route.meta.needLogin() && !user.isLogin()) {
+    if(route.meta.needLogin && !user.isLogin()) {
       await router.replace({
         name:'user-account-login-index',
       })

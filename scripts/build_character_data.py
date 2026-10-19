@@ -85,7 +85,9 @@ def main():
             voice_path = None
             if r['voice'] and (VOICE_DIR / f"{r['voice']}.opus").exists():
                 voice_path = f"extracted/voice/{r['voice']}.opus"
-            kept.append({'text': t, 'voice': voice_path, 'file': r['file']})
+            kept.append({'text': t, 'voice': voice_path, 'file': r['file'],
+                         'source_id': r.get('id'), 'source_location': r.get('source_location'),
+                         'source_sha256': r.get('source_sha256')})
 
         with open(out_dir / 'lines_clean.jsonl', 'w', encoding='utf-8') as f:
             for k in kept:

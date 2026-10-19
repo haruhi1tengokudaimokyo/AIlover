@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "source_files": 109,
+  "parsed_records": 22050,
+  "dialogue_examples": 3272,
+  "verified_lore": 0,
+  "voice_records": 12489,
+  "duplicates": 295,
+  "reused_source_files": 109,
+  "uncertain_records": 22050,
+  "missing_fields": {
+    "speaker": 87,
+    "character": 17943,
+    "voice_id": 9561,
+    "route_id": 22050,
+    "scene_id": 0,
+    "emotion": 22050
+  },
+  "missing_audio": 8382,
+  "issue_reason_counts": {
+    "unknown_control": 118,
+    "unknown_tag": 132
+  },
+  "examples_by_character": {
+    "hika": 1960,
+    "ayame": 1312
+  }
+}

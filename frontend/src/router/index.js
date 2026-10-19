@@ -9,11 +9,13 @@ import SpaceIndex from "@/views/user/space/SpaceIndex.vue";
 import ProfileIndex from "@/views/user/profile/ProfileIndex.vue";
 import {useUserStore} from "@/stores/user.js";
 import UpdateCharacter from "@/views/create/character/UpdateCharacter.vue";
+import SettingsIndex from '@/views/settings/SettingsIndex.vue';
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/settings/', component: SettingsIndex, name: 'settings-index', meta: { needLogin: true } },
 
     {
       path: '/',

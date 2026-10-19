@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "transport": "real_local_http_and_sse",
+  "external_api_calls": 0,
+  "login": true,
+  "canonical_manual_correction": true,
+  "private_source_view": true,
+  "manual_cancel_cleanup": true,
+  "next_generation_isolated": true,
+  "completed_metrics": true,
+  "debug_evidence": true,
+  "browser_clicks_verified": false,
+  "notice": "不代表云端模型、真实音频或浏览器按钮验收。"
+}

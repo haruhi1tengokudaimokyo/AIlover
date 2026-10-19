@@ -17,4 +17,14 @@ extracted/sprites/
 extracted/scenario_all/
 backend/lancedb_style/
 .venv/
+backend/backups/
+backend/evaluations/
 dist/
+share/
+# Local provenance bundles contain copyrighted script text; never publish automatically.
+backend/story_data/
+backend/lancedb_story/
+extracted/story_builds/
+# 微调训练数据（约 1GB wav，源自版权语音，仅本地使用，不入库）
+finetune_data/tts/dataset/
+finetune_data/tts/reference/

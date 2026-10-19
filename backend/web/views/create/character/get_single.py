@@ -17,8 +17,11 @@ class GetSingleCharacterView(APIView):
                     'id':character.id,
                     'name':character.name,
                     'profile':character.profile,
-                    'photo':character.photo.url,
-                    'background_image':character.background_image.url,
+                    'voice': character.voice,
+                    'greeting': character.greeting,
+                    'quick_replies': character.quick_replies or '[]',
+                    'photo':character.photo.url if character.photo else '',
+                    'background_image':character.background_image.url if character.background_image else '',
                 }
             })
 

@@ -19,8 +19,8 @@ export default defineConfig({
   // 前端已改为同源相对地址请求；开发模式下把 /api 和 /media 代理到 Django
   server: {
     proxy: {
-      '/api': 'http://127.0.0.1:8000',
-      '/media': 'http://127.0.0.1:8000',
+      '/api': process.env.AILOVER_DEV_BACKEND || 'http://127.0.0.1:8000',
+      '/media': process.env.AILOVER_DEV_BACKEND || 'http://127.0.0.1:8000',
     },
   },
   resolve: {

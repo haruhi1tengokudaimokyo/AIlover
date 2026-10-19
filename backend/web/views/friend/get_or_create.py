@@ -19,8 +19,8 @@ def _character_payload(character):
         'profile': character.profile,
         'greeting': character.greeting or '',
         'quick_replies': quick_replies,
-        'photo': character.photo.url,
-        'background_image': character.background_image.url,
+        'photo': character.photo.url if character.photo else '',
+        'background_image': character.background_image.url if character.background_image else '',
         'author': {
             'user_id': author.user_id,
             'username': author.user.username,

@@ -7,8 +7,10 @@ from openai import OpenAI
 class CustomEmbeddings(Embeddings):
     def __init__(self):
         self.client = OpenAI(
-            api_key=os.getenv("API_KEY"),
-            base_url=os.getenv("API_BASE")
+            api_key=os.getenv('EMBEDDING_API_KEY') or os.getenv('API_KEY'),
+            base_url=os.getenv('EMBEDDING_API_BASE') or os.getenv('API_BASE'),
+            timeout=15,
+            max_retries=1,
         )
 
     def embed_documents(self, texts):
@@ -20,9 +22,9 @@ class CustomEmbeddings(Embeddings):
             if not batch:
                 continue
             response = self.client.embeddings.create(
-                model="text-embedding-v4",
+                model=os.getenv('EMBEDDING_MODEL', 'text-embedding-v4'),
                 input=batch,
-                dimensions=1024
+                dimensions=int(os.getenv('EMBEDDING_DIMENSIONS', '1024')),
             )
             all_embeddings.extend([data.embedding for data in response.data])
         return all_embeddings

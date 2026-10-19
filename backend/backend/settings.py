@@ -15,10 +15,14 @@ import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 与启动位置无关：运行时目录 > backend/.env > 仓库根 .env。
+# 已设置的环境变量优先，避免覆盖用户显式配置。
+load_dotenv(Path(os.getenv('AI_LOVER_DATA_DIR', BASE_DIR)) / '.env')
+load_dotenv(BASE_DIR / '.env')
+load_dotenv(BASE_DIR.parent / '.env')
 
 # 打包为 exe 时，launcher 会注入 AI_LOVER_DATA_DIR：
 # 数据库与媒体文件存到 exe 旁边的 data/ 目录，避免写进只读的临时解包目录。

@@ -37,7 +37,7 @@ function  handleSearch() {
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
             <MenuIcon />
           </label>
-          <div class="px-2 font-bold text-xl">AIFriends</div>
+          <div class="px-2 font-bold text-xl">AIlover</div>
         </div>
         <div class="navbar-centre w-4/5 max-w-180 flex justify-centre">
             <form @submit.prevent="handleSearch" class="join w-4/5 flex justify-center">
@@ -70,6 +70,7 @@ function  handleSearch() {
       <div class="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-16 is-drawer-open:w-64">
         <!-- Sidebar content here -->
         <ul class="menu w-full grow">
+          <li v-if="user.isLogin()"><RouterLink :to="{name:'settings-index'}" active-class="menu-focus" class="py-3" data-tip="运行设置"><span aria-hidden="true">⚙</span><span class="is-drawer-close:hidden ml-2">运行设置</span></RouterLink></li>
           <!-- List item -->
           <li>
             <RouterLink :to="{name:'homepage-index'}" active-class = "menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="首页">

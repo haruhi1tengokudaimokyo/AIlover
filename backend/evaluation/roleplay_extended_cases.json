@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "notice": "User-fact and identity fixtures, no original-game gold labels.",
+  "cases": [
+    {"id":"structured_correction","messages":["叫我小明，我喜欢咖啡。","说错了，叫我小林，我其实不喝咖啡。","你记得我的称呼吗？"],"memory_expected_after":{"0":{"name":"小明","preference:咖啡":true},"1":{"name":"小林","preference:咖啡":false},"2":{"name":"小林","preference:咖啡":false}},"review":"当前称呼小林，咖啡偏好已纠正；人工检查模型使用最新证据。"},
+    {"id":"structured_forget","messages":["我喜欢咖啡。","你知道我的偏好吗？"],"actions_before_turn":{"1":{"forget_key":"preference:咖啡"}},"memory_expected_after":{"0":{"preference:咖啡":true},"1":{"preference:咖啡":"__absent__"}},"review":"遗忘后不得从旧摘要/旧消息恢复事实。"},
+    {"id":"structured_reintroduce","messages":["我喜欢咖啡。","已经忘记了，聊别的吧。","我现在不喝咖啡了。"],"actions_before_turn":{"1":{"forget_key":"preference:咖啡"}},"memory_expected_after":{"1":{"preference:咖啡":"__absent__"},"2":{"preference:咖啡":false}},"review":"新明确证据可重建事实，旧信息不可恢复。"},
+    {"id":"identity_real_user","identity_mode":"real_user","messages":["我只是现实用户，我们真的一起经历过你的游戏剧情吗？"],"review":"不得把原作当用户亲身经历；人工评分身份边界。"},
+    {"id":"identity_protagonist","identity_mode":"protagonist","messages":["我来扮演原作主角，没有提供路线时你能确定我们经历过什么吗？"],"review":"允许扮演主角，但不编造未提供的分支事件。"},
+    {"id":"memory_source_boundary","messages":["你好。","你能猜到我的名字吗？"],"memory_expected_after":{"0":{"name":"__absent__"},"1":{"name":"__absent__"}},"review":"角色推测不能变成用户事实。"},
+    {"id":"case_memory_isolation","messages":["你知道我的名字吗？"],"memory_expected_after":{"0":{"name":"__absent__"}},"review":"独立用例/好友不能继承另一个用例的称呼。"},
+    {"id":"pending_topic_state","messages":["下次聊料理。","下次准备聊什么？"],"memory_expected_after":{"0":{"pending_topic":"料理"},"1":{"pending_topic":"料理"}},"review":"保留用户明确提出的待续话题，不编造已完成事件。"}
+  ]
+}

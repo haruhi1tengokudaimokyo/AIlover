@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class RefreshTokenView(APIView):
+    # 刷新凭据是 HttpOnly cookie，不能先用已过期的 access token 验证。
+    authentication_classes = []
     def post(self, request):
         try:
             refresh_token = request.COOKIES.get('refresh_token')

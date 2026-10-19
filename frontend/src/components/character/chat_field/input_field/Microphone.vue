@@ -4,23 +4,30 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import {MicVAD} from "@ricky0123/vad-web";
 import api from "@/js/http/api.js";
 
-const emit = defineEmits(['close', 'send', 'stop'])
+const emit = defineEmits(['close', 'send', 'stop', 'error'])
 const isSpeaking = ref(false)
 let vadInstance = null;
+let disposed = false;
+let recordingVersion = 0;
+let asrController = null;
 
 const startRecording = async () => {
-  const baseUrl = "/static/frontend/vad/";
+  const baseUrl = import.meta.env.DEV ? '/vad/' : '/static/frontend/vad/';
   try {
-    vadInstance = await MicVAD.new({
+    const instance = await MicVAD.new({
       baseAssetPath: baseUrl,
       onSpeechStart: () => {
+        if (disposed) return;
+        ++recordingVersion;
+        asrController?.abort();
         isSpeaking.value = true;
         emit('stop')
       },
       onSpeechEnd: (audio) => {
+        if (disposed) return;
         isSpeaking.value = false;
         const pcm16 = float32ToInt16(audio);
-        sendToBackend(pcm16);
+        sendToBackend(pcm16, recordingVersion);
       },
       ortConfig: (ort) => {
         ort.env.wasm.wasmPaths = baseUrl;
@@ -32,9 +39,13 @@ const startRecording = async () => {
       redemptionFrames: 5,
     });
 
-    await vadInstance.start();
+    if (disposed) { await instance.destroy(); return; }
+    vadInstance = instance;
+    await instance.start();
   } catch (e) {
+    if (disposed) return;
     console.error("VAD 初始化失败:", e);
+    emit('error', '麦克风初始化失败，请检查麦克风权限和语音资源，或改用文字输入');
   }
 };
 // 将 Float32 转 PCM 16-bit
@@ -47,19 +58,24 @@ const float32ToInt16 = (float32Array) => {
   return buffer.buffer;
 };
 
-const sendToBackend = async (arrayBuffer) => {
+const sendToBackend = async (arrayBuffer, version) => {
+  asrController?.abort();
+  const controller = new AbortController();
+  asrController = controller;
   const blob = new Blob([arrayBuffer], { type: "audio/pcm" });
   const formData = new FormData();
   formData.append("audio", blob,'voice.pcm');
 
   try{
-    const res = await api.post('/api/friend/message/asr/asr/', formData)
+    const res = await api.post('/api/friend/message/asr/asr/', formData, { signal: controller.signal })
+    if (disposed || version !== recordingVersion || controller !== asrController) return;
     const data = res.data
     if (data.result === 'success') {
       emit('send', null, data.text)
     }
   } catch (err) {
-    console.error(err)
+    if (disposed || controller.signal.aborted || version !== recordingVersion) return;
+    emit('error', err.response?.data?.result || '语音识别失败，请改用文字输入')
   }
 };
 
@@ -68,15 +84,18 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  disposed = true;
+  ++recordingVersion;
+  asrController?.abort();
   if (vadInstance) {
-    vadInstance.destroy()
+    Promise.resolve(vadInstance.destroy()).catch(() => {})
     vadInstance = null
   }
 })
 </script>
 
 <template>
-  <div class="absolute bottom-4 left-2 h-12 w-86 flex items-center bg-black/30 backdrop-blur-sm rounded-2xl">
+  <div class="absolute bottom-4 left-2 right-2 h-12 flex items-center bg-black/30 backdrop-blur-sm rounded-2xl">
     <div v-if="isSpeaking" class="flex items-center justify-center gap-1 h-6 flex-1">
       <div
         v-for="i in 32" :key="i"

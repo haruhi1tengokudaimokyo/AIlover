@@ -1,0 +1,47 @@
+{
+  "slug": "ayame",
+  "api_calls": 0,
+  "messages": 3,
+  "trace": {
+    "retrieval": [
+      {
+        "channel": "lore",
+        "strategy": "sparse",
+        "status": "degraded",
+        "hit_ids": [],
+        "reason": "bundle_missing_or_empty",
+        "latency_ms": 1.76
+      },
+      {
+        "channel": "style",
+        "strategy": "sparse",
+        "status": "ok",
+        "hit_ids": [
+          "180fcf3bacd6c899a13b2cb4",
+          "31e9dbcbc3ff1726e37570e9",
+          "65c818116eae70f64fca3360",
+          "deb3378fcea346dd5fa4c719"
+        ],
+        "latency_ms": 179.933
+      }
+    ],
+    "context": {
+      "budget": 16000,
+      "estimated_token_upper_bound": 8229,
+      "estimator": "utf8_bytes",
+      "identity": "real_user",
+      "memory_versions": {},
+      "injected_ids": {
+        "lore": [],
+        "style": [
+          "180fcf3bacd6c899a13b2cb4",
+          "31e9dbcbc3ff1726e37570e9",
+          "65c818116eae70f64fca3360",
+          "deb3378fcea346dd5fa4c719"
+        ],
+        "memory": []
+      }
+    }
+  },
+  "notice": "只有实际注入契约，不评价真实模型效果；正文不写入报告。"
+}

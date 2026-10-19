@@ -1,7 +1,46 @@
 # AIlover — 二次元角色 AI 聊天桌面应用
 
+2026-10-14源码升级已实现Phase1–4工程链路：带来源KAG上下文、双通道Hybrid RAG、结构化记忆、可中断语音、离线消融及私有开发证据面板。默认本地风格bundle已构建；真实Lore及人物还原质量尚待人工审核和真实模型评测。见 [最终交付与命令](docs/PHASE4_DELIVERY.md)、[评测](docs/EVALUATION.md)、[技术亮点](PROJECT_TECHNICAL_HIGHLIGHTS.md)。旧EXE需要重建验收；以下旧素材/音色说明不属于本轮实施，本轮不进行模型训练。
+
 Django + LangGraph 后端 + Vue 3 前端，支持流式对话、语音合成（TTS）、语音识别（ASR）、长期记忆。
 可打包为 Windows 桌面 exe，内置「丛雨」（《千恋＊万花》）角色卡。
+
+### 本次修复后的开发入口
+
+在仓库根目录复制 `.env.example` 为 `.env`，填入 `API_KEY` 和 `API_BASE`。
+先设 `TTS_ENABLED=false` 测试文字对话，再接通语音。不要把密钥提交到 Git。
+
+```powershell
+.venv/Scripts/python.exe backend/manage.py check
+.venv/Scripts/python.exe backend/manage.py migrate
+.venv/Scripts/python.exe backend/manage.py doctor
+.venv/Scripts/python.exe launcher.py
+```
+
+已存在账号和角色时不必重建。无角色时先注册，再运行
+`.venv/Scripts/python.exe backend/manage.py seed_ousama --username 你的用户名`。
+
+聊天窗口支持「纯文字 / 语音开启」、停止回复以及错误提示。语音故障时继续返回文字；
+生成失败或用户中断的回复不会写入历史。默认结构化记忆由成功消息的持久MemoryJob提取，支持纠错/遗忘/来源；旧摘要模式保留为兼容路径。
+默认本地Sparse双通道检索，无关问题允许空结果。Dense需显式 `build_story_index --dense` 并启用，旧 `build_style_index` 保留。可用 `EMBEDDING_*` 和 `TTS_API_KEY` 单独配置服务。
+
+前端 `npm run dev` / `npm run build` 自动从依赖准备 VAD 资源。
+重新构建前端后仍需运行 `scripts/sync_template.py`。源码更新不会自动更新旧的 exe。
+
+完整检查结论见 [PROJECT_STATUS.md](PROJECT_STATUS.md)。
+
+### 已增加的管理功能
+
+- 侧栏「运行设置」：查看配置状态和本地/联网数据说明，不显示密钥。
+- 聊天窗口「记忆与记录」：查看、纠正、关闭自动记忆、搜索、导出和清空。
+- 角色编辑页：修改完整角色设定、音色ID、开场白和快捷话题。
+- 同一角色会话同时只能生成一条回复；清空历史会一起清空记忆并关闭自动记忆。
+- 备份：`.venv/Scripts/python.exe backend/manage.py backup_data`，包含数据库和媒体，不含 `.env`。
+- 语料审计：`audit_corpus`；评估用例：`evaluate_roleplay`，默认离线。
+
+新版桌面包在 `dist/updated/AIlover/AIlover.exe`，旧版仍保留。
+新版也支持 `AIlover.exe --doctor` 和 `AIlover.exe --backup`。
+需要你完成的操作见 [USER_NEXT_STEPS.md](USER_NEXT_STEPS.md)。
 
 ---
 
@@ -127,3 +166,19 @@ cd backend
 `bgimage.xp3`（背景 313MB）、`stimage.xp3`（立绘 752MB）、`evimage.xp3`（事件 CG 1.4GB）
 尚未提取。提取后把角色立绘/背景放到 `backend/seed_assets/<slug>/photo.jpg` 和
 `background.jpg`，重跑 `seed_ousama` 即可替换占位图（注意自行过滤 R18 CG）。
+
+## Story-Aware RAG 技术升级（Phase 1）
+
+已实现带来源与真实上下文的数据构建、剧情/风格双通道Hybrid RAG、预算和离线评测，尚无人工审核真实Lore。后续记忆、语音取消和综合评测已实现。见 [当前交付](docs/PHASE4_DELIVERY.md)、[架构](docs/ARCHITECTURE.md)、[数据流水线](docs/DATA_PIPELINE.md)。
+
+## 结构化长期记忆（Phase 2）
+
+已新增来源条目、纠错/遗忘、持久任务恢复和管理界面，默认 `MEMORY_MODE=structured`；需要先备份并迁移到 `0011_structured_memory`。本机已完成迁移与原有记录保留核验。具体能力边界、命令与回退见 [记忆说明](docs/MEMORY.md)。
+
+## 流式语音与取消（Phase 3）
+
+已实现句子缓冲、逐轮标识、私有取消接口、有序音频与播放器清理，并将主模型聊天节点改为可取消的异步调用，保留同步评测。85 项后端测试和 5 项播放器测试通过；详见 [语音说明](docs/VOICE.md)。云端音频、真实麦克风与全双工效果尚未验证，不需要训练模型或部署新服务。
+
+## 综合评测和开发诊断（Phase 4）
+
+新增 `evaluate_system`、隔离库真实记忆消融、严格Dense单路评测和 `score_roleplay` 人工评分入口；原有12用例加8扩展覆盖身份、纠错、遗忘与证据边界。80组合零失败、15/15记忆检查通过，均为Offline契约；开发面板按用户/好友/轮次鉴权。真实本地HTTP/SSE取消及证据验证通过，浏览器按钮/云模型/设备/新EXE尚未验收。完整结果见 [评测](docs/EVALUATION.md)。

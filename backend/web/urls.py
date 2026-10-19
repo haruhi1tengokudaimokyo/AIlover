@@ -5,8 +5,11 @@ from web.views.create.character.get_list import GetListCharacterView
 from web.views.friend.get_list import GetListFriendView
 from web.views.friend.get_or_create import GetOrCreateFriendView
 from web.views.friend.message.asr.asr import ASRView
-from web.views.friend.message.chat.chat import MessageChatView
+from web.views.friend.message.chat.chat import MessageChatView, CancelChatView
+from web.views.friend.message.chat.debug import DebugEvidenceView
 from web.views.friend.message.get_history import GetHistoryView
+from web.views.friend.message.manage import MemoryView, MemoryItemsView, MemorySourceView, HistorySearchView, HistoryExportView, HistoryClearView
+from web.views.settings import RuntimeStatusView
 from web.views.friend.remove import RemoveFriendView
 from web.views.homepage.index import HomepageIndexView
 from web.views.index import index
@@ -39,7 +42,16 @@ urlpatterns = [
     path('api/friend/remove/',RemoveFriendView.as_view()),
     path('api/friend/get_list/',GetListFriendView.as_view()),
     path('api/friend/message/chat/', MessageChatView.as_view()),
+    path('api/friend/message/chat/cancel/', CancelChatView.as_view()),
+    path('api/friend/message/chat/debug/', DebugEvidenceView.as_view()),
     path('api/friend/message/get_history/', GetHistoryView.as_view()),
+    path('api/friend/memory/', MemoryView.as_view()),
+    path('api/friend/memory/items/', MemoryItemsView.as_view()),
+    path('api/friend/memory/source/', MemorySourceView.as_view()),
+    path('api/friend/message/search/', HistorySearchView.as_view()),
+    path('api/friend/message/export/', HistoryExportView.as_view()),
+    path('api/friend/message/clear/', HistoryClearView.as_view()),
+    path('api/settings/status/', RuntimeStatusView.as_view()),
     path('api/friend/message/asr/asr/', ASRView.as_view()),
     path('',index),
 

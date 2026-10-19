@@ -71,12 +71,25 @@ def run_server(port: int):
     import django
     django.setup()
     from django.core.management import call_command
-    call_command('migrate', interactive=False, verbosity=0)
+    migrate_safely()
 
     from django.core.wsgi import get_wsgi_application
     from waitress import serve
     app = get_wsgi_application()
     serve(app, host='127.0.0.1', port=port, threads=8, _quiet=True)
+
+
+def migrate_safely():
+    """Back up an existing SQLite database before pending desktop migrations."""
+    from django.db import connection
+    from django.db.migrations.executor import MigrationExecutor
+    from django.core.management import call_command
+    executor = MigrationExecutor(connection)
+    pending = executor.migration_plan(executor.loader.graph.leaf_nodes())
+    source = Path(connection.settings_dict['NAME'])
+    if pending and source.is_file() and source.stat().st_size > 0:
+        call_command('backup_data')
+    call_command('migrate', interactive=False, verbosity=0)
 
 
 def wait_ready(port: int, timeout: float = 30.0) -> bool:
@@ -96,7 +109,7 @@ def run_seed_murasame(username: str | None):
     import django
     django.setup()
     from django.core.management import call_command
-    call_command('migrate', interactive=False, verbosity=0)
+    migrate_safely()
     call_command('seed_murasame', username=username)
     print('\n丛雨角色已就绪，启动程序后在「创建角色/添加好友」里就能找到她。')
 
@@ -106,13 +119,24 @@ def run_seed_ousama(username: str | None):
     import django
     django.setup()
     from django.core.management import call_command
-    call_command('migrate', interactive=False, verbosity=0)
+    migrate_safely()
     call_command('seed_ousama', username=username)
     print('\n绯华、菖蒲角色已就绪，启动程序后在「添加好友」里就能找到她们。')
 
 
 def main():
     setup_env()
+
+    if '--doctor' in sys.argv or '--backup' in sys.argv:
+        import django
+        django.setup()
+        from django.core.management import call_command
+        if '--backup' in sys.argv:
+            call_command('backup_data')
+        else:
+            migrate_safely()
+            call_command('doctor')
+        return
 
     if '--seed-murasame' in sys.argv:
         idx = sys.argv.index('--seed-murasame')

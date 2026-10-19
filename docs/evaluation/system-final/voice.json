@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "provider": "deterministic_mock_delays",
+  "real_audio": false,
+  "api_calls": 0,
+  "runs": [
+    {
+      "segmented": false,
+      "text_complete": true,
+      "ttft_ms": 0.0,
+      "ttfa_ms": 0.0,
+      "model_ms": 0.0,
+      "tts_ms": 14.999999999417923,
+      "queue_wait_count": 18,
+      "queue_wait_total_ms": 0.0,
+      "queue_wait_max_ms": 0,
+      "audio_chunks": 18,
+      "sentence_count": 18,
+      "errors": [],
+      "cancelled": false,
+      "cleanup_complete": true,
+      "complete_ms": 61.99999999807915
+    },
+    {
+      "segmented": true,
+      "text_complete": true,
+      "ttft_ms": 16.00000000325963,
+      "ttfa_ms": 141.00000000325963,
+      "model_ms": 233.99999999674037,
+      "tts_ms": 250.0,
+      "queue_wait_count": 2,
+      "queue_wait_total_ms": 0.0,
+      "queue_wait_max_ms": 0,
+      "audio_chunks": 2,
+      "sentence_count": 2,
+      "errors": [],
+      "cancelled": false,
+      "cleanup_complete": true,
+      "complete_ms": 296.9999999986612
+    }
+  ]
+}

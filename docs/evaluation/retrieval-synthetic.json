@@ -1,0 +1,500 @@
+{
+  "synthetic": true,
+  "k": 4,
+  "dense_provider": "deterministic_mock",
+  "strategies": {
+    "legacy": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 0.75,
+        "ndcg_at_k": 0.8132194378880441,
+        "irrelevant_injection": 1.0,
+        "latency_ms": 0.033629999961704016
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook",
+            "l-route-a",
+            "l-friend",
+            "l-route-b"
+          ],
+          "latency_ms": 0.11839999933727086,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-route-b",
+            "l-friend",
+            "l-route-a",
+            "s-worry"
+          ],
+          "latency_ms": 0.027400001272326335,
+          "recall_at_k": 1.0,
+          "mrr": 0.5,
+          "ndcg_at_k": 0.6309297535714575,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "latency_ms": 0.013199998647905886,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry",
+            "l-friend",
+            "l-route-a",
+            "l-route-b"
+          ],
+          "latency_ms": 0.029699996957788244,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend",
+            "l-route-a",
+            "l-cook",
+            "l-route-b"
+          ],
+          "latency_ms": 0.026200003048870713,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [
+            "l-route-a",
+            "l-route-b",
+            "l-friend",
+            "l-cook"
+          ],
+          "latency_ms": 0.03429999924264848,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-cook",
+            "l-route-b",
+            "s-worry",
+            "l-route-a"
+          ],
+          "latency_ms": 0.020699997548945248,
+          "recall_at_k": 1.0,
+          "mrr": 0.25,
+          "ndcg_at_k": 0.43067655807339306,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [
+            "l-cook",
+            "l-route-b",
+            "s-worry",
+            "l-route-a"
+          ],
+          "latency_ms": 0.02099999983329326,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [
+            "l-cook",
+            "s-worry",
+            "l-friend",
+            "l-route-a"
+          ],
+          "latency_ms": 0.025400000595254824,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": true
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "s-worry",
+            "l-route-a",
+            "l-friend",
+            "l-cook"
+          ],
+          "latency_ms": 0.02000000313273631,
+          "recall_at_k": 1.0,
+          "mrr": 0.5,
+          "ndcg_at_k": 0.6309297535714575,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "sparse": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 1.5091899997059954
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook"
+          ],
+          "latency_ms": 7.142400001612259,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 1.0242999996989965,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "latency_ms": 0.8530999984941445,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "latency_ms": 2.993999998579966,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 0.5698999993910547,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "latency_ms": 0.4900999992969446,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 0.5043999990448356,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "latency_ms": 0.4907000002276618,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "latency_ms": 0.5138999986229464,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 0.5091000020911451,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "dense": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 0.8011999998416286
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook"
+          ],
+          "latency_ms": 0.5636999994749203,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 0.5184000001463573,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "latency_ms": 0.5869000015081838,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "latency_ms": 0.5834000003233086,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 1.055400000041118,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "latency_ms": 1.0282999974151608,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 1.001399999950081,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "latency_ms": 0.9518999977444764,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "latency_ms": 0.9143999996013008,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 0.8082000022113789,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    },
+    "hybrid": {
+      "aggregate": {
+        "recall_at_k": 1.0,
+        "mrr": 1.0,
+        "ndcg_at_k": 1.0,
+        "irrelevant_injection": 0.0,
+        "latency_ms": 0.7479900003090734
+      },
+      "cases": [
+        {
+          "case": "cross_language",
+          "hit_ids": [
+            "l-cook"
+          ],
+          "latency_ms": 0.8266000004368834,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "relationship",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 0.7196000005933456,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "fact",
+          "hit_ids": [
+            "l-nova"
+          ],
+          "latency_ms": 0.7804999986547045,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "style",
+          "hit_ids": [
+            "s-worry"
+          ],
+          "latency_ms": 0.7960999973875005,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "ambiguity",
+          "hit_ids": [
+            "l-friend"
+          ],
+          "latency_ms": 0.7763000030536205,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "irrelevant",
+          "hit_ids": [],
+          "latency_ms": 0.7005000006756745,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "branch_conflict",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 0.72580000050948,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        },
+        {
+          "case": "unknown_route",
+          "hit_ids": [],
+          "latency_ms": 0.7100000002537854,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "scene_conflict",
+          "hit_ids": [],
+          "latency_ms": 0.7366999998339452,
+          "recall_at_k": null,
+          "mrr": null,
+          "ndcg_at_k": null,
+          "irrelevant_injection": false
+        },
+        {
+          "case": "short_cjk",
+          "hit_ids": [
+            "l-route-a"
+          ],
+          "latency_ms": 0.707800001691794,
+          "recall_at_k": 1.0,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "irrelevant_injection": null
+        }
+      ]
+    }
+  }
+}

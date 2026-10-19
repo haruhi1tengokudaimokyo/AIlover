@@ -18,7 +18,7 @@ class GetListFriendView(APIView):
             for friend in friends_raw:
                 character = friend.character
                 friends.append({
-                    'id': character.id,
+                    'id': friend.id,
                     'character': _character_payload(character),
             })
             return Response({

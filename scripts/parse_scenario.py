@@ -13,6 +13,10 @@ import json
 import re
 from collections import Counter
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'backend'))
+from web.documents.utils.story_pipeline import decode_source, parse_script
 
 SRC = Path('extracted/scenario_all/scenario')
 OUT = Path('extracted/corpus.jsonl')
@@ -25,42 +29,15 @@ SKIP_CHARS = {'地', 'hh'}  # 地=旁白
 
 
 def decode(path):
-    raw = open(path, 'rb').read()
-    for enc in ('utf-8', 'utf-16-le', 'shift-jis'):
-        try:
-            return raw.decode(enc)
-        except UnicodeDecodeError:
-            continue
-    return raw.decode('utf-8', errors='replace')
+    return decode_source(path)[0]
 
 
 def parse_file(path):
-    """逐行解析：名字标签行之后跟着 [>>]台词[<<] 行"""
-    text = decode(path)
-    rows = []
-    cur_char = None
-    cur_voice = None
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line.startswith(';') or line.startswith('@') or line.startswith('*'):
-            continue
-        m = TAG_RE.match(line)
-        if m and not line.startswith('[>>'):
-            name, voice = m.group(1), m.group(2)
-            cur_char, cur_voice = name, voice
-            # 同一行可能直接带台词
-            rest = line[m.end():]
-            tm = TEXT_RE.search(rest)
-            if tm and cur_char:
-                rows.append({'file': path.name, 'char': cur_char,
-                             'voice': cur_voice, 'text': tm.group(1).strip()})
-            continue
-        tm = TEXT_RE.search(line)
-        if tm and cur_char:
-            rows.append({'file': path.name, 'char': cur_char,
-                         'voice': cur_voice, 'text': tm.group(1).strip()})
-            cur_voice = None
-    return rows
+    """Compatibility fields plus provenance; prefer build_story_data for new builds."""
+    path = Path(path).resolve()
+    root = SRC.resolve() if path.is_relative_to(SRC.resolve()) else path.parent
+    records, _ = parse_script(path, root)
+    return [dict(row, file=path.name, char=row['speaker'], voice=row['voice_id'], text=row['raw_text']) for row in records]
 
 
 def main():

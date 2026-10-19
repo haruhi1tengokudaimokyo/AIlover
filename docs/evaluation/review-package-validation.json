@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-14",
+  "mode": "source_archive_acceptance",
+  "backend_test_execution": "Extracted source tree, existing Windows Python environment, separate Django test database",
+  "backend_tests": 101,
+  "backend_passed": 101,
+  "backend_seconds": 26.253,
+  "legacy_tests_use_synthetic_corpus": true,
+  "game_corpus_directories_required": false,
+  "test_database_destroyed": true,
+  "package_selection_and_privacy_tests": {"passed": 2, "seconds": 0.061},
+  "frontend_previous_verified": {"tests_passed": 5, "type_check": true, "production_build": true},
+  "frontend_reinstalled_in_extracted_tree": false,
+  "fresh_dependency_install_verified": false,
+  "python_environment": "3.12.14 Windows, 95 installed distribution versions recorded",
+  "node_environment": "24.14.0",
+  "user_database_readonly_comparison": "Original account/friend/message/character/profile rows unchanged; MemoryItem count 0",
+  "real_model_quality_verified": false,
+  "real_voice_verified": false,
+  "new_exe_verified": false,
+  "notice": "最终ZIP完整性、每文件SHA256与Python语法由verify_review_package.py另行核验；本报告不是全新系统安装或真实角色效果验收。"
+}

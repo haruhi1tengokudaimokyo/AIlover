@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "prepare-vad": "node scripts/prepare-vad.mjs",
+    "predev": "npm run prepare-vad",
+    "prebuild": "npm run prepare-vad",
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",

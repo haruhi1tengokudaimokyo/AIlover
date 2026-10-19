@@ -19,6 +19,7 @@ datas = [
     # 《王様恋愛》角色卡与种子素材（含参考音频）
     ('backend/seed_cards', 'backend/seed_cards'),
     ('backend/seed_assets', 'backend/seed_assets'),
+    ('backend/evaluation', 'backend/evaluation'),
 ]
 
 hiddenimports = [

@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "slug": "ayame",
+      "lines": 1303,
+      "invalid_lines": [],
+      "unique_texts": 1300,
+      "duplicate_rows": 3,
+      "scene_count": 34,
+      "voice_rows": 1284,
+      "missing_voice_count": 0,
+      "missing_voice_examples": [],
+      "review_samples": [
+        {
+          "text": "あの緋華が男の子と一緒に帰っちゃうなんて、それってもうホの字ってことだよね",
+          "voice": "extracted/voice/vo8_0021.opus",
+          "file": "0_10.ks"
+        },
+        {
+          "text": "言いたくなかったけど、君たちホント兄妹だよね。思考が",
+          "voice": "extracted/voice/vo8_0134.opus",
+          "file": "0_10.ks"
+        },
+        {
+          "text": "ポロリ？",
+          "voice": "extracted/voice/vo8_0256.opus",
+          "file": "1_17.ks"
+        },
+        {
+          "text": "なにって見ればわかるでしょ？　プールを満喫して────",
+          "voice": "extracted/voice/vo8_0366.opus",
+          "file": "4_1.ks"
+        },
+        {
+          "text": "え、そうかな？　えへへ",
+          "voice": "extracted/voice/vo8_0998.opus",
+          "file": "4_11.ks"
+        },
+        {
+          "text": "なに笑ってるんだ～っ！　ムカつくぅ！",
+          "voice": "extracted/voice/vo8_1115.opus",
+          "file": "4_12.ks"
+        },
+        {
+          "text": "私も妹欲しかったな～、今からでもパパとママにお願いしちゃおうかな！　ふへへへ！",
+          "voice": "extracted/voice/vo8_1295.opus",
+          "file": "4_18.ks"
+        },
+        {
+          "text": "どっちのものでもないぞ～",
+          "voice": "extracted/voice/vo8_0534.opus",
+          "file": "4_2.ks"
+        },
+        {
+          "text": "んんぅ……なんか君も息切れしてない？　大丈夫そ？",
+          "voice": "extracted/voice/vo8_1507.opus",
+          "file": "4_21.ks"
+        },
+        {
+          "text": "揉めるほどないじゃん",
+          "voice": "extracted/voice/vo8_1644.opus",
+          "file": "4_23.ks"
+        },
+        {
+          "text": "げえっ！？　緋華、なんでこんなところに────",
+          "voice": "extracted/voice/vo8_0614.opus",
+          "file": "4_3.ks"
+        },
+        {
+          "text": "へえ、我慢してるんだ？　君らしくもない",
+          "voice": "extracted/voice/vo8_0761.opus",
+          "file": "4_7.ks"
+        }
+      ]
+    },
+    {
+      "slug": "hika",
+      "lines": 1910,
+      "invalid_lines": [],
+      "unique_texts": 1893,
+      "duplicate_rows": 17,
+      "scene_count": 58,
+      "voice_rows": 1876,
+      "missing_voice_count": 0,
+      "missing_voice_examples": [],
+      "review_samples": [
+        {
+          "text": "緋華よ、佐藤緋華。その貴様ってのもやめて",
+          "voice": "extracted/voice/vo2_0050.opus",
+          "file": "0_1.ks"
+        },
+        {
+          "text": "なにその悪い顔、出会わないことを祈ってるわ……",
+          "voice": "extracted/voice/vo2_0536.opus",
+          "file": "0_13.ks"
+        },
+        {
+          "text": "憤ることで恥ずかしさを誤魔化してるのよ！　なにがデリカシーよ、まるでないじゃないの！？",
+          "voice": "extracted/voice/vo2_0712.opus",
+          "file": "0_16.ks"
+        },
+        {
+          "text": "当然のようにあたしたちと同じ制服着てんじゃないわよ！！！　一歩間違えたら即通報モノなんだけど！？",
+          "voice": "extracted/voice/vo2_0200.opus",
+          "file": "0_3.ks"
+        },
+        {
+          "text": "ふむったあと、わかりやすく口元ニヤついてんのよ！　普段偉ぶってんだから、自己分析ぐらい完璧にしておきなさいよね！",
+          "voice": "extracted/voice/vo2_0357.opus",
+          "file": "0_5.ks"
+        },
+        {
+          "text": "自己評価高すぎでしょ……や、そこらへんはまあ妥当なんだけど、肝心の中身がちょっとね……",
+          "voice": "extracted/voice/vo2_1567.opus",
+          "file": "1_11.ks"
+        },
+        {
+          "text": "え、なに？　あたしの腕掴んで────",
+          "voice": "extracted/voice/vo2_1794.opus",
+          "file": "1_13.ks"
+        },
+        {
+          "text": "わざとらしく引っ付いちゃって……",
+          "voice": "extracted/voice/vo2_2087.opus",
+          "file": "1_19.ks"
+        },
+        {
+          "text": "（やっぱりデートのつもりなんてないでしょ、こいつ）",
+          "voice": "extracted/voice/vo2_0996.opus",
+          "file": "1_4.ks"
+        },
+        {
+          "text": "やっぱりエロいと思ってるんじゃないのぉ！？　デートだと思っていたあたしがバカみたい！",
+          "voice": "extracted/voice/vo2_1161.opus",
+          "file": "1_5.ks"
+        },
+        {
+          "text": "なんもうれしくない記念の場所ね",
+          "voice": "extracted/voice/vo2_1369.opus",
+          "file": "1_9.ks"
+        },
+        {
+          "text": "や、性癖が魂の形に紐付いてるってどんだけよ",
+          "voice": "extracted/voice/vo2_2209.opus",
+          "file": "3_14.ks"
+        }
+      ]
+    }
+  ]
+}
