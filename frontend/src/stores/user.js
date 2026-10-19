@@ -23,7 +23,7 @@ export const useUserStore = defineStore('user', ()=>{
         id.value = 0
         username.value = ''
         photo.value = ''
-        accessToken.value = ''
+        profile.value = ''
         accessToken.value = ''
     }
     function setHasPulledUserInfo(newStatus){

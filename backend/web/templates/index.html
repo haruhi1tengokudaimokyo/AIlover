@@ -6,11 +6,19 @@
     <link rel="icon" href="{% static 'frontend/favicon.ico' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIlover · 角色聊天</title>
-    <script type="module" crossorigin src="{% static 'frontend/assets/index-p4BDgdoJ.js' %}"></script>
-    <link rel="stylesheet" crossorigin href="{% static 'frontend/assets/index-B3KfZ4i0.css' %}">
+    <script>
+      // 首帧前应用主题，避免深色/浅色闪烁
+      try {
+        var t = localStorage.getItem('ailover.theme')
+        document.documentElement.dataset.theme = t === 'light' ? 'ailover-light' : 'ailover-dark'
+      } catch (e) {
+        document.documentElement.dataset.theme = 'ailover-dark'
+      }
+    </script>
+    <script type="module" crossorigin src="{% static 'frontend/assets/index-TQrYILH9.js' %}"></script>
+    <link rel="stylesheet" crossorigin href="{% static 'frontend/assets/index-DQ4ICq6U.css' %}">
   </head>
   <body>
     <div id="app"></div>
-
   </body>
 </html>

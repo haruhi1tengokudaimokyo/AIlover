@@ -1,2 +1,225 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+@plugin "daisyui" {
+  themes: ailover-dark --default, ailover-light;
+}
+
+/* ============================================================
+   AIlover 2.0 设计系统（docs/UI_REDESIGN.md §3）
+   Midnight Lavender / Soft Rose / Warm Ivory
+   ============================================================ */
+
+/* ---- 主题：ailover-dark（默认） ---- */
+@plugin "daisyui/theme" {
+  name: "ailover-dark";
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #15101f; /* 页面底 */
+  --color-base-200: #1e1729; /* 卡片/面板 */
+  --color-base-300: #271d35; /* 次级面板 */
+  --color-base-content: #f2ede7; /* Warm Ivory 主文字 */
+  --color-primary: #c9a0dc; /* Soft Lavender 主强调 */
+  --color-primary-content: #241a2e;
+  --color-secondary: #e8a0bf; /* Soft Rose 次强调 */
+  --color-secondary-content: #2e1a24;
+  --color-accent: #c9a0dc;
+  --color-accent-content: #241a2e;
+  --color-neutral: #2a2138;
+  --color-neutral-content: #cfc6dd;
+  --color-info: #7ec3e3;
+  --color-info-content: #122831;
+  --color-success: #8fd0a8;
+  --color-success-content: #12281c;
+  --color-warning: #e8c07a;
+  --color-warning-content: #2e2312;
+  --color-error: #e0607e;
+  --color-error-content: #2e1218;
+
+  --radius-selector: 0.625rem; /* 10px */
+  --radius-field: 0.625rem; /* 10px 按钮/输入框 */
+  --radius-box: 0.75rem; /* 12px 卡片 */
+  --border: 1px;
+}
+
+/* ---- 主题：ailover-light ---- */
+@plugin "daisyui/theme" {
+  name: "ailover-light";
+  color-scheme: light;
+
+  --color-base-100: #faf7f2;
+  --color-base-200: #ffffff;
+  --color-base-300: #f3ede6;
+  --color-base-content: #2a2233;
+  --color-primary: #8b6fc0;
+  --color-primary-content: #faf7f2;
+  --color-secondary: #c76b8f;
+  --color-secondary-content: #faf7f2;
+  --color-accent: #8b6fc0;
+  --color-accent-content: #faf7f2;
+  --color-neutral: #e9e2f2;
+  --color-neutral-content: #4a4058;
+  --color-info: #4a9bc4;
+  --color-info-content: #eef7fc;
+  --color-success: #4d9e6e;
+  --color-success-content: #eef8f1;
+  --color-warning: #c99a3f;
+  --color-warning-content: #faf3e3;
+  --color-error: #c74a68;
+  --color-error-content: #fbeef1;
+
+  --radius-selector: 0.625rem;
+  --radius-field: 0.625rem;
+  --radius-box: 0.75rem;
+  --border: 1px;
+}
+
+/* ---- 语义化 CSS 变量（随主题切换） ---- */
+:root,
+[data-theme="ailover-dark"] {
+  --color-base: #15101f;
+  --color-surface: #1e1729;
+  --color-surface-2: #271d35;
+  --color-text: #f2ede7;
+  --color-text-dim: #a89fb8;
+  --color-accent: #c9a0dc;
+  --color-rose: #e8a0bf;
+  --color-char-hika: #e0607e; /* 绯华（蔷薇红） */
+  --color-char-ayame: #9b7ede; /* 菖蒲（鸢尾紫） */
+
+  /* 三层 soft shadow：深色下带环境光式内阴影 */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.35), 0 4px 16px -4px rgb(0 0 0 / 0.45),
+    inset 0 1px 0 rgb(255 255 255 / 0.04);
+  --shadow-pop: 0 4px 8px rgb(0 0 0 / 0.35), 0 12px 32px -8px rgb(0 0 0 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --shadow-stage: 0 8px 24px rgb(0 0 0 / 0.4), 0 24px 64px -12px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+[data-theme="ailover-light"] {
+  --color-base: #faf7f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f3ede6;
+  --color-text: #2a2233;
+  --color-text-dim: #6f6580;
+  --color-accent: #8b6fc0;
+  --color-rose: #c76b8f;
+  --color-char-hika: #e0607e;
+  --color-char-ayame: #9b7ede;
+
+  --shadow-card: 0 1px 2px rgb(42 34 51 / 0.06), 0 4px 16px -4px rgb(42 34 51 / 0.1);
+  --shadow-pop: 0 4px 12px rgb(42 34 51 / 0.08), 0 16px 40px -8px rgb(42 34 51 / 0.16);
+  --shadow-stage: 0 8px 24px rgb(42 34 51 / 0.1), 0 32px 80px -12px rgb(42 34 51 / 0.2);
+}
+
+/* ---- 三档动效时长（150 / 250 / 400ms），曲线统一 ---- */
+:root {
+  --duration-fast: 150ms;
+  --duration-med: 250ms;
+  --duration-slow: 400ms;
+  --ease-soft: cubic-bezier(0.22, 0.68, 0.35, 1);
+}
+
+/* ---- 注册为 Tailwind theme key，生成 bg-surface / shadow-card 等工具类 ---- */
+@theme inline {
+  --color-base: var(--color-base);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-text: var(--color-text);
+  --color-text-dim: var(--color-text-dim);
+  --color-rose: var(--color-rose);
+  --color-char-hika: var(--color-char-hika);
+  --color-char-ayame: var(--color-char-ayame);
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+  --shadow-stage: var(--shadow-stage);
+  --ease-soft: var(--ease-soft);
+}
+
+@theme {
+  --font-sans: "Noto Sans SC", system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-display: "Noto Serif SC", "Songti SC", serif;
+  --radius-panel: 1rem; /* 16px 面板圆角（卡片 12px 由 --radius-box 提供） */
+  --animate-fade-in: fade-in 250ms var(--ease-soft);
+  --animate-rise-in: rise-in 400ms var(--ease-soft);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ---- 全局基础样式 ---- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-base);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 统一滚动条 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-text) 22%, transparent) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-text) 22%, transparent);
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-text) 36%, transparent);
+  }
+
+  /* 键盘聚焦环 */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  /* 全站尊重 prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

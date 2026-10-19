@@ -5,6 +5,15 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIlover · 角色聊天</title>
+    <script>
+      // 首帧前应用主题，避免深色/浅色闪烁
+      try {
+        var t = localStorage.getItem('ailover.theme')
+        document.documentElement.dataset.theme = t === 'light' ? 'ailover-light' : 'ailover-dark'
+      } catch (e) {
+        document.documentElement.dataset.theme = 'ailover-dark'
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>

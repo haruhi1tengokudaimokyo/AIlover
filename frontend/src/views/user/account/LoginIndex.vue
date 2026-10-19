@@ -3,10 +3,13 @@ import {ref} from "vue";
 import {useUserStore} from "@/stores/user";
 import {useRouter} from "vue-router";
 import api from "@/js/http/api.js";
+import AppPanel from "@/design/AppPanel.vue";
+import AppButton from "@/design/AppButton.vue";
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const isSubmitting = ref(false)
 const user = useUserStore()
 const router = useRouter()
 
@@ -18,6 +21,7 @@ async function handleLogin() {
   else if (!password.value.trim()) {
     errorMessage.value = '密码不能为空'
   }else{
+    isSubmitting.value = true
     try{
       const res = await api.post('/api/user/account/login/',{
         username: username.value,
@@ -34,28 +38,38 @@ async function handleLogin() {
         errorMessage.value = data.result
       }
     }catch(err){
+    } finally {
+      isSubmitting.value = false
     }
   }
 }
 </script>
 
 <template>
-  <div class = "flex justify-center mt-30">
-    <form @submit.prevent="handleLogin" class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+  <div class="relative flex min-h-[70vh] items-center justify-center px-4 py-12">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 mx-auto h-64 max-w-xl rounded-full bg-accent/15 blur-3xl"
+      aria-hidden="true"
+    ></div>
+    <AppPanel elevated class="relative w-full max-w-sm animate-rise-in">
+      <h1 class="text-xl font-black text-center">欢迎回来</h1>
+      <p class="text-sm text-text-dim text-center mt-1 mb-5">登录后继续你的故事</p>
+      <form @submit.prevent="handleLogin" class="fieldset">
 
-      <label class="label">用户名</label>
-      <input v-model="username" type="text" class="input" placeholder="用户名" />
+        <label class="label">用户名</label>
+        <input v-model="username" type="text" class="input w-full" placeholder="用户名" />
 
-      <label class="label">密码</label>
-      <input v-model="password" type="password" class="input" placeholder="密码" />
+        <label class="label">密码</label>
+        <input v-model="password" type="password" class="input w-full" placeholder="密码" />
 
-      <p v-if="errorMessage" class="text-sm text-red-500 mt-1">{{errorMessage}}</p>
+        <p v-if="errorMessage" class="text-sm text-error mt-1">{{errorMessage}}</p>
 
-      <button class="btn btn-neutral mt-4">登录</button>
-      <div class = 'flex justify-end'>
-        <RouterLink :to="{name: 'user-account-register-index'}" class = "btn btn-sn btn-ghost text-gray-500">注册</RouterLink>
-      </div>
-    </form>
+        <AppButton type="submit" block class="mt-4" :loading="isSubmitting">登录</AppButton>
+        <div class="flex justify-end mt-2">
+          <RouterLink :to="{name: 'user-account-register-index'}" class="btn btn-sm btn-ghost text-text-dim">没有账号？去注册</RouterLink>
+        </div>
+      </form>
+    </AppPanel>
   </div>
 </template>
 
