@@ -16,6 +16,7 @@ from rest_framework.renderers import BaseRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import ScopedRateThrottle
 
 from web.models.friend import Friend, Message, SystemPrompt
 from web.views.friend.message.chat.graph import ChatGraph
@@ -106,6 +107,9 @@ def add_recent_messages(state, friend):
 
 
 class MessageChatView(APIView):
+    throttle_scope = 'chat'
+    # Desktop defaults have no chat quota. Cloud settings enable it explicitly.
+    throttle_classes = [ScopedRateThrottle] if 'chat' in settings.REST_FRAMEWORK.get('DEFAULT_THROTTLE_RATES', {}) else []
     permission_classes = [IsAuthenticated]
     renderer_classes = [SSERenderer]
 
@@ -146,7 +150,11 @@ class MessageChatView(APIView):
             generation.cancel()
             logger.error('准备对话失败 generation=%s error_type=%s', generation.id, type(exc).__name__)
             return Response({'result': '模型配置不可用，请检查 .env 和服务日志'}, status=503)
-        response = ChatResponse(self.event_stream(app, inputs, friend, message.strip(), audio, lease, generation),
+        iterator = self.event_stream(app, inputs, friend, message.strip(), audio, lease, generation)
+        if hasattr(request._request, 'scope'):
+            from web.streaming import async_stream
+            iterator = async_stream(iterator)
+        response = ChatResponse(iterator,
                                 generation=generation, content_type='text/event-stream')
         response['Cache-Control'] = 'no-cache'
         response['X-Accel-Buffering'] = 'no'
@@ -268,7 +276,7 @@ class MessageChatView(APIView):
         output, usage, failed = '', {}, False
         started, first_token, first_audio = time.monotonic(), None, None
         try:
-            yield f'data: {json.dumps({"event": "start", "generation_id": generation.id})}\n\n'
+            yield f'data: {json.dumps({"event": "start", "generation_id": generation.id, "audio_enabled": audio and os.getenv("TTS_ENABLED", "true").lower() == "true"})}\n\n'
             if settings.DEBUG and os.getenv('ROLEPLAY_DEBUG_TRACE', 'false').lower() == 'true':
                 yield f'data: {json.dumps({"trace": inputs.get("trace", {}), "generation_id": generation.id}, ensure_ascii=False)}\n\n'
             while True:

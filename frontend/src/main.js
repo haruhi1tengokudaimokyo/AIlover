@@ -15,4 +15,5 @@ app.use(router)
 // 在挂载前应用主题，避免闪烁
 useThemeStore().init()
 
-app.mount('#app')
+// Lazy routes must resolve before App reads route.meta during session bootstrap.
+router.isReady().then(() => app.mount('#app'))

@@ -123,7 +123,7 @@
 
 /* ---- 注册为 Tailwind theme key，生成 bg-surface / shadow-card 等工具类 ---- */
 @theme inline {
-  --color-base: var(--color-base);
+  --color-canvas: var(--color-base);
   --color-surface: var(--color-surface);
   --color-surface-2: var(--color-surface-2);
   --color-text: var(--color-text);
@@ -223,3 +223,7 @@
     }
   }
 }
+
+/* A workspace owns its viewport and scroll containers. */
+body:has(.chat-workspace) { overflow: hidden; }
+body:has(.chat-workspace.immersive) aside { visibility: hidden; }

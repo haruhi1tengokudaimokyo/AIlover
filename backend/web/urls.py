@@ -4,6 +4,7 @@ from django.urls import path, re_path
 from web.views.create.character.get_list import GetListCharacterView
 from web.views.friend.get_list import GetListFriendView
 from web.views.friend.get_or_create import GetOrCreateFriendView
+from web.views.friend.get_single import GetSingleFriendView
 from web.views.friend.message.asr.asr import ASRView
 from web.views.friend.message.chat.chat import MessageChatView, CancelChatView
 from web.views.friend.message.chat.debug import DebugEvidenceView
@@ -39,6 +40,7 @@ urlpatterns = [
     path('api/create/character/get_list/',GetListCharacterView.as_view()),
     path('api/homepage/index/',HomepageIndexView.as_view()),
     path('api/friend/get_or_create/', GetOrCreateFriendView.as_view()),
+    path('api/friend/get_single/', GetSingleFriendView.as_view()),
     path('api/friend/remove/',RemoveFriendView.as_view()),
     path('api/friend/get_list/',GetListFriendView.as_view()),
     path('api/friend/message/chat/', MessageChatView.as_view()),

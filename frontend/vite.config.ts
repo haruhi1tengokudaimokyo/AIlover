@@ -20,6 +20,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': process.env.AILOVER_DEV_BACKEND || 'http://127.0.0.1:8000',
+      '/static': process.env.AILOVER_DEV_BACKEND || 'http://127.0.0.1:8000',
       '/media': process.env.AILOVER_DEV_BACKEND || 'http://127.0.0.1:8000',
     },
   },

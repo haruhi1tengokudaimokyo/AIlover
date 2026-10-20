@@ -19,11 +19,12 @@ const initialized = ref(false)
 const sentinelRef = useTemplateRef('sentinel-ref')
 const route = useRoute()
 const latest = createLatestRequest()
+let disposed = false
 
-const searchQuery = computed(() => (route.query.q || '').trim())
+const searchQuery = computed(() => String(route.query.q || '').trim())
 // 搜索状态下不展示精选区，全部结果进网格
-const featured = computed(() => (searchQuery.value ? [] : characters.value.slice(0, 2)))
-const gridCharacters = computed(() => (searchQuery.value ? characters.value : characters.value.slice(2)))
+const featured = computed(() => searchQuery.value ? [] : [...characters.value].sort((a, b) => Number(Boolean(b.assets?.portrait_url)) - Number(Boolean(a.assets?.portrait_url))).slice(0, 2))
+const gridCharacters = computed(() => searchQuery.value ? characters.value : characters.value.filter(character => !featured.value.some(item => item.id === character.id)))
 
 function checkSentinelVisible() {
   // 判断哨兵是否能被看到
@@ -33,7 +34,7 @@ function checkSentinelVisible() {
 }
 
 async function loadMore() {
-  if (isLoading.value || !hasCharacters.value) return
+  if (disposed || isLoading.value || !hasCharacters.value) return
   const seq = latest.next()
   isLoading.value = true
   loadError.value = ''
@@ -76,6 +77,7 @@ async function loadMore() {
 let observer = null
 onMounted(async () => {
   await loadMore()
+  if (disposed) return
   initialized.value = true
 
   observer = new IntersectionObserver(
@@ -106,6 +108,7 @@ watch(() => route.query.q, () => {
 })
 
 onBeforeUnmount(() => {
+  disposed = true
   latest.invalidate() // 卸载后不再 set 状态
   observer?.disconnect()
 })
@@ -125,6 +128,9 @@ onBeforeUnmount(() => {
       <p class="relative mt-3 text-text-dim text-sm md:text-base">每一个角色，都是一段专属于你的故事</p>
     </section>
 
+    <form class="lobby-search" @submit.prevent="$router.push({ query: { q: $event.target.elements.search.value.trim() } })">
+      <span aria-hidden="true">⌕</span><input name="search" :value="searchQuery" placeholder="寻找想见的角色，或一种心动的感觉…" aria-label="搜索角色"><button>寻找角色 ↗</button>
+    </form>
     <!-- 精选角色 hero 区（前 2 个角色，搜索时隐藏） -->
     <section v-if="featured.length" class="grid gap-5 md:gap-6 lg:grid-cols-2 animate-rise-in" aria-label="精选角色">
       <HeroCharacterCard v-for="character in featured" :key="character.id" :character="character" />
@@ -182,4 +188,5 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.lobby-search{display:flex;align-items:center;gap:12px;max-width:640px;margin:0 auto 32px;padding:8px 10px 8px 18px;border:1px solid #a89fb830;border-radius:12px;background:var(--color-surface)}.lobby-search span{font-size:25px;color:var(--color-accent)}.lobby-search input{flex:1;min-width:0;background:transparent;font-size:13px;outline:0}.lobby-search button{padding:10px 14px;background:var(--color-surface-2);border-radius:8px;font-size:12px;white-space:nowrap}@media(max-width:480px){.lobby-search input{font-size:11px}.lobby-search button{padding:9px;font-size:10px}}
 </style>

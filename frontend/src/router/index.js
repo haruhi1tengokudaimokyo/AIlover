@@ -1,20 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePageIndex from "@/views/homepage/HomePageIndex.vue";
-import FriendIndex from "@/views/friend/FriendIndex.vue";
-import CreateIndex from "@/views/create/CreateIndex.vue";
-import NotFoundIndex from "@/views/error/NotFoundIndex.vue";
-import LoginIndex from "@/views/user/account/LoginIndex.vue";
-import RegisterIndex from "@/views/user/account/RegisterIndex.vue";
-import SpaceIndex from "@/views/user/space/SpaceIndex.vue";
-import ProfileIndex from "@/views/user/profile/ProfileIndex.vue";
+const HomePageIndex = () => import('@/views/homepage/HomePageIndex.vue')
+const FriendIndex = () => import('@/views/friend/FriendIndex.vue')
+const CreateIndex = () => import('@/views/create/CreateIndex.vue')
+const NotFoundIndex = () => import('@/views/error/NotFoundIndex.vue')
+const LoginIndex = () => import('@/views/user/account/LoginIndex.vue')
+const RegisterIndex = () => import('@/views/user/account/RegisterIndex.vue')
+const SpaceIndex = () => import('@/views/user/space/SpaceIndex.vue')
+const ProfileIndex = () => import('@/views/user/profile/ProfileIndex.vue')
 import {useUserStore} from "@/stores/user.js";
-import UpdateCharacter from "@/views/create/character/UpdateCharacter.vue";
-import SettingsIndex from '@/views/settings/SettingsIndex.vue';
+const UpdateCharacter = () => import('@/views/create/character/UpdateCharacter.vue')
+const SettingsIndex = () => import('@/views/settings/SettingsIndex.vue')
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/chat/:friendId', name: 'chat-workspace', component: () => import('@/views/friend/ChatWorkspace.vue'), meta: { needLogin: true } },
     { path: '/settings/', component: SettingsIndex, name: 'settings-index', meta: { needLogin: true } },
 
     {
@@ -101,11 +102,12 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to,form)=>{
+router.beforeEach((to)=>{
   const user = useUserStore()
   if(to.meta.needLogin && user.hasPulledUserInfo && !user.isLogin()){
     return {
       name:'user-account-login-index',
+      query: { redirect: to.fullPath },
     }
   }
   return true

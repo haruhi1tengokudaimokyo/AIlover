@@ -1,7 +1,7 @@
 <script setup lang="js">
 import {ref} from "vue";
 import {useUserStore} from "@/stores/user";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import api from "@/js/http/api.js";
 import AppPanel from "@/design/AppPanel.vue";
 import AppButton from "@/design/AppButton.vue";
@@ -12,8 +12,10 @@ const errorMessage = ref('')
 const isSubmitting = ref(false)
 const user = useUserStore()
 const router = useRouter()
+const route = useRoute()
 
 async function handleLogin() {
+  if (isSubmitting.value) return
   errorMessage.value = ''
   if (!username.value.trim()) {
     errorMessage.value = '用户名不能为空'
@@ -31,13 +33,13 @@ async function handleLogin() {
       if(data.result === 'success'){
         user.setAccessToken(data.access)
         user.setUserInfo(data)
-        await router.push({
-          name: 'homepage-index',
-        })
+        const redirect = String(route.query.redirect || '/')
+        await router.push(redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/')
       }else{
         errorMessage.value = data.result
       }
     }catch(err){
+      errorMessage.value = err.response?.data?.result || '登录失败，请检查网络后重试'
     } finally {
       isSubmitting.value = false
     }
@@ -57,10 +59,10 @@ async function handleLogin() {
       <form @submit.prevent="handleLogin" class="fieldset">
 
         <label class="label">用户名</label>
-        <input v-model="username" type="text" class="input w-full" placeholder="用户名" />
+        <input v-model="username" type="text" aria-label="用户名" autocomplete="username" class="input w-full" placeholder="用户名" />
 
         <label class="label">密码</label>
-        <input v-model="password" type="password" class="input w-full" placeholder="密码" />
+        <input v-model="password" type="password" aria-label="密码" autocomplete="current-password" class="input w-full" placeholder="密码" />
 
         <p v-if="errorMessage" class="text-sm text-error mt-1">{{errorMessage}}</p>
 

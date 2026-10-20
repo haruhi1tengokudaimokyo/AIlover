@@ -21,6 +21,7 @@ onMounted(async () => {
     if (route.meta.needLogin && !user.isLogin()) {
       await router.replace({
         name: 'user-account-login-index',
+        query: { redirect: route.fullPath },
       })
     }
   }

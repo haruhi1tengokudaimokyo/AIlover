@@ -84,3 +84,13 @@ stop→interrupted；error 帧→error），禁止关键词猜情绪。
 - [ ] `npm run build` 后同步 `backend/web/templates/index.html` 哈希（脚本化）
 - [ ] `npm test`（node --test）通过；新增纯逻辑（状态机/SSE 解析）补测试
 - [ ] finetune_data/、数据库、igrations 不动
+
+## 2026-10-20 素材复核与实际实现修正
+
+- 用户确认仅使用本游戏提取素材，不使用原创示例角色。所有原创角色代码与前端图片引用已撤下。
+- 游戏 Init_VariableADV.ks 的真实编号为绯华=2、菖蒲=8；先前本地 portrait_map 将 st1/st2 直接映射到两人，编号不正确。
+- 游戏使用 body + face + accessory 分层，Macro_Stand.ks 在 dx=0/dy=0 合成。旧 sprites 并不是可直接展示的完整角色。
+- 现有 scripts/tlg.py 的第8、12号色彩变换错误，导致黄色色块。已与 Kirikiri 官方 tvpgl.c 核对并修复，新增数学向量回归测试。
+- scripts/prepare_game_stage.py 从本地 stimage.xp3、bgimage.xp3 可复现地产生两位游戏角色的 WebP 透明立绘、头像及场景背景；不写数据库、不触碰 finetune_data。
+- 资源保存在 gitignored backend/media/character/stage，Django 展示接口兼容映射；缺少游戏资源的源码包仍回退到已有上传图。
+- 实际组件使用 ChatWorkspace → CharacterStage / ChatHistory / InputField / ConversationManager。沿用 InputField 的既有 SSE、取消代际与 OrderedAudioPlayer，不另造平行播放器。

@@ -3,8 +3,8 @@ export class OrderedAudioPlayer {
   constructor({ audio = new Audio(), createSource = () => new MediaSource(),
     supported = () => typeof MediaSource !== 'undefined' && MediaSource.isTypeSupported('audio/mpeg'),
     createURL = source => URL.createObjectURL(source), revokeURL = url => URL.revokeObjectURL(url),
-    onError = () => {}, clock = () => performance.now() } = {}) {
-    Object.assign(this, { audio, createSource, supported, createURL, revokeURL, onError, clock })
+    onError = () => {}, onState = () => {}, clock = () => performance.now() } = {}) {
+    Object.assign(this, { audio, createSource, supported, createURL, revokeURL, onError, onState, clock })
     this.generation = null
     this.source = null
     this.buffer = null
@@ -28,6 +28,14 @@ export class OrderedAudioPlayer {
     this.source = source
     this.url = this.createURL(source)
     this.audio.src = this.url
+    const report = state => {
+      if (this.generation === generation && this.source === source) this.onState(state, generation)
+    }
+    this.playbackHandlers = { playing: () => report('speaking'), waiting: () => report('waiting'),
+      ended: () => report('idle'), error: () => {
+        if (this.generation === generation && this.source === source) this.fail('语音播放失败，文字回复继续显示')
+      } }
+    for (const [event, callback] of Object.entries(this.playbackHandlers)) this.audio.addEventListener?.(event, callback)
     source.addEventListener('sourceopen', () => {
       if (this.generation !== generation || this.source !== source || this.failed) return
       try {
@@ -43,7 +51,7 @@ export class OrderedAudioPlayer {
       } catch { this.fail('语音格式不可播放，文字回复继续显示') }
     }, { once: true })
     this.audio.play().catch(() => {
-      if (this.generation === generation && this.source === source) this.onError('浏览器阻止自动播放，请检查语音权限')
+      if (this.generation === generation && this.source === source) this.fail('浏览器阻止自动播放，请检查语音权限')
     })
   }
 
@@ -70,6 +78,8 @@ export class OrderedAudioPlayer {
   finish(generation) {
     if (this.generation !== generation || this.failed) return
     if (this.pending.size) { this.fail('语音片段缺失，继续文字回复'); return }
+    // Text-only/degraded responses legitimately contain no audio packets.
+    if (this.expected === 0) { this.stop(); return }
     this.ended = true
     this.drain()
   }
@@ -93,6 +103,11 @@ export class OrderedAudioPlayer {
 
   stop() {
     const started = this.clock()
+    if (this.playbackHandlers) {
+      for (const [event, callback] of Object.entries(this.playbackHandlers)) this.audio.removeEventListener?.(event, callback)
+      this.playbackHandlers = null
+    }
+    this.onState('idle', this.generation)
     this.generation = null // invalidate callbacks before touching browser resources
     this.audio.pause()
     this.pending.clear()

@@ -1,4 +1,6 @@
 <script setup lang="js">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user.js'
 import HomePageIcon from '@/components/navbar/Icon/HomePageIcon.vue'
 import FriendIcon from '@/components/navbar/Icon/FriendIcon.vue'
@@ -8,6 +10,8 @@ import ShellSearch from '@/components/shell/ShellSearch.vue'
 import UserMenu from '@/components/shell/UserMenu.vue'
 
 const user = useUserStore()
+const route = useRoute()
+const isChat = computed(() => route.name === 'chat-workspace')
 
 const railLinkClass =
   'flex items-center justify-center size-12 rounded-box text-text-dim transition-all duration-150 ease-soft hover:text-text hover:bg-surface-2 tooltip tooltip-right'
@@ -19,7 +23,7 @@ const tabActiveClass = 'text-accent'
 </script>
 
 <template>
-  <div class="min-h-screen bg-base text-text">
+  <div class="min-h-screen bg-canvas text-text">
     <!-- 桌面端：左侧 slim icon rail（≥lg） -->
     <aside
       class="hidden lg:flex fixed inset-y-0 left-0 z-40 w-20 flex-col items-center gap-2 border-r border-base-content/8 bg-surface/70 backdrop-blur-md py-5"
@@ -60,7 +64,7 @@ const tabActiveClass = 'text-accent'
     </aside>
 
     <!-- 移动端：顶部品牌条 -->
-    <header
+    <header v-if="!isChat"
       class="lg:hidden sticky top-0 z-40 flex h-14 items-center gap-2 border-b border-base-content/8 bg-surface/80 backdrop-blur-md px-4"
       style="padding-top: env(safe-area-inset-top); height: calc(3.5rem + env(safe-area-inset-top))"
     >
@@ -86,7 +90,7 @@ const tabActiveClass = 'text-accent'
     </main>
 
     <!-- 移动端：底部 tab bar（safe-area） -->
-    <nav
+    <nav v-if="!isChat"
       class="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-base-content/8 bg-surface/90 backdrop-blur-md"
       style="padding-bottom: env(safe-area-inset-bottom)"
       aria-label="主导航"

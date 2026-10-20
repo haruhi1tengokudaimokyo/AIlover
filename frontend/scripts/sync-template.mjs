@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const builtIndex = path.resolve(root, '../backend/static/frontend/index.html')
 const targetTemplate = path.resolve(root, '../backend/web/templates/index.html')
 
-let html = readFileSync(builtIndex, 'utf8')
+let html = readFileSync(builtIndex, 'utf8').replace(/\r\n?/g, '\n')
 
 const jsMatch = html.match(/assets\/index-[\w-]+\.js/)
 const cssMatch = html.match(/assets\/index-[\w-]+\.css/)

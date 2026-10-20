@@ -1,0 +1,18 @@
+{
+  "hika": {
+    "url": "/media/character/stage/hika-portrait.webp",
+    "photo_url": "/media/character/stage/hika-avatar.webp",
+    "background_url": "/media/character/stage/hika-background.webp",
+    "theme_color": "#e6a0ae",
+    "display_ready": true,
+    "source": "Local game layers; scripts/prepare_game_stage.py; assets excluded from Git"
+  },
+  "ayame": {
+    "url": "/media/character/stage/ayame-portrait.webp",
+    "photo_url": "/media/character/stage/ayame-avatar.webp",
+    "background_url": "/media/character/stage/ayame-background.webp",
+    "theme_color": "#b4a4d9",
+    "display_ready": true,
+    "source": "Local game layers; scripts/prepare_game_stage.py; assets excluded from Git"
+  }
+}

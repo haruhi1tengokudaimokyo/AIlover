@@ -93,3 +93,36 @@ test('unsupported browser degrades to text without allocating a source', () => {
   assert.equal(errors.length, 1)
   assert.equal(player.accept('A', 0, encoded(1)), false)
 })
+
+test('a response with no audio packets finishes silently and releases the player', () => {
+  const { player, errors, revoked } = fixture()
+  player.start('text-only')
+  player.finish('text-only')
+  assert.equal(player.generation, null)
+  assert.deepEqual(errors, [])
+  assert.deepEqual(revoked, ['mock:1'])
+})
+
+test('speaking follows actual playback and stale playback handlers are removed', () => {
+  const { player, audio } = fixture()
+  const events = new Map(), states = []
+  audio.addEventListener = (event, handler) => events.set(event, handler)
+  audio.removeEventListener = (event, handler) => { if (events.get(event) === handler) events.delete(event) }
+  player.onState = (state, generation) => states.push([state, generation])
+  player.start('A')
+  assert.equal(states.some(([state]) => state === 'speaking'), false)
+  const oldPlaying = events.get('playing')
+  oldPlaying()
+  assert.deepEqual(states.at(-1), ['speaking', 'A'])
+  events.get('waiting')()
+  assert.deepEqual(states.at(-1), ['waiting', 'A'])
+  player.start('B')
+  const count = states.length
+  oldPlaying()
+  assert.equal(states.length, count)
+  events.get('playing')()
+  events.get('ended')()
+  assert.deepEqual(states.at(-1), ['idle', 'B'])
+  player.stop()
+  assert.equal(events.size, 0)
+})

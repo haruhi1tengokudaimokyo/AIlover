@@ -28,3 +28,9 @@ extracted/story_builds/
 # 微调训练数据（约 1GB wav，源自版权语音，仅本地使用，不入库）
 finetune_data/tts/dataset/
 finetune_data/tts/reference/
+
+# Local game render metadata (copyrighted source, never distributed)
+extracted/stage_metadata/
+
+# Local UI captures may include game art; deliver locally, do not publish by default.
+docs/screenshots/

@@ -142,7 +142,7 @@ if (BASE_DIR / 'static').exists():
     STATICFILES_DIRS.append(BASE_DIR / 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = DATA_DIR / 'media'
+MEDIA_ROOT = Path(os.getenv('AI_LOVER_MEDIA_ROOT', str(DATA_DIR / 'media')))
 
 # whitenoise：exe 模式下（DEBUG=False）也能直接伺服前端静态文件
 WHITENOISE_USE_FINDERS = True  # 免 collectstatic，直接从 STATICFILES_DIRS 伺服

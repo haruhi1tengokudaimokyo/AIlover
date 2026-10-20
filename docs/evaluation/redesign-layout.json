@@ -1,0 +1,132 @@
+[
+  {
+    "documentWidth": 1440,
+    "height": 900,
+    "images": [
+      {
+        "height": 900,
+        "loaded": true,
+        "width": 1600
+      },
+      {
+        "height": 1600,
+        "loaded": true,
+        "width": 467
+      }
+    ],
+    "input": {
+      "bottom": 866.5,
+      "left": 1014.4000244140624,
+      "right": 1420.000030517578
+    },
+    "stage": {
+      "height": 836,
+      "width": 913.6000366210938
+    },
+    "width": 1440
+  },
+  {
+    "documentWidth": 1920,
+    "height": 1080,
+    "images": [
+      {
+        "height": 900,
+        "loaded": true,
+        "width": 1600
+      },
+      {
+        "height": 1600,
+        "loaded": true,
+        "width": 467
+      }
+    ],
+    "input": {
+      "bottom": 1046.5,
+      "left": 1470.800048828125,
+      "right": 1900.000061035156
+    },
+    "stage": {
+      "height": 1016,
+      "width": 1370
+    },
+    "width": 1920
+  },
+  {
+    "documentWidth": 768,
+    "height": 1024,
+    "images": [
+      {
+        "height": 900,
+        "loaded": true,
+        "width": 1600
+      },
+      {
+        "height": 1600,
+        "loaded": true,
+        "width": 467
+      }
+    ],
+    "input": {
+      "bottom": 990.5,
+      "left": 438.8000183105469,
+      "right": 748.0000305175781
+    },
+    "stage": {
+      "height": 960,
+      "width": 418
+    },
+    "width": 768
+  },
+  {
+    "documentWidth": 390,
+    "height": 844,
+    "images": [
+      {
+        "height": 900,
+        "loaded": true,
+        "width": 1600
+      },
+      {
+        "height": 1600,
+        "loaded": true,
+        "width": 467
+      }
+    ],
+    "input": {
+      "bottom": 836,
+      "left": 12,
+      "right": 378.3999938964844
+    },
+    "stage": {
+      "height": 270.07501220703125,
+      "width": 390.3999938964844
+    },
+    "width": 390
+  },
+  {
+    "documentWidth": 360,
+    "height": 800,
+    "images": [
+      {
+        "height": 900,
+        "loaded": true,
+        "width": 1600
+      },
+      {
+        "height": 1600,
+        "loaded": true,
+        "width": 467
+      }
+    ],
+    "input": {
+      "bottom": 792,
+      "left": 12,
+      "right": 348
+    },
+    "stage": {
+      "height": 256,
+      "width": 360
+    },
+    "width": 360
+  }
+]

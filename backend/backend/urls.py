@@ -14,13 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
+from web.views.health import health
 
 urlpatterns = [
+    path('api/health/', health),
     path('admin/', admin.site.urls),
     path('', include('web.urls')),
 ]
@@ -34,7 +37,7 @@ if settings.DEBUG:
         '/media/',
         document_root=settings.MEDIA_ROOT
     )
-else:
+elif os.getenv('DJANGO_SETTINGS_MODULE', '') != 'backend.production':
     # exe 桌面模式下（DEBUG=False）本地单用户使用，直接由 Django 伺服媒体文件
     urlpatterns += [
         re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

@@ -4,7 +4,7 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 import {MicVAD} from "@ricky0123/vad-web";
 import api from "@/js/http/api.js";
 
-const emit = defineEmits(['close', 'send', 'stop', 'error'])
+const emit = defineEmits(['close', 'send', 'stop', 'error', 'state'])
 const isSpeaking = ref(false)
 let vadInstance = null;
 let disposed = false;
@@ -22,10 +22,12 @@ const startRecording = async () => {
         asrController?.abort();
         isSpeaking.value = true;
         emit('stop')
+        emit('state', 'listening')
       },
       onSpeechEnd: (audio) => {
         if (disposed) return;
         isSpeaking.value = false;
+        emit('state', 'thinking');
         const pcm16 = float32ToInt16(audio);
         sendToBackend(pcm16, recordingVersion);
       },
@@ -70,8 +72,11 @@ const sendToBackend = async (arrayBuffer, version) => {
     const res = await api.post('/api/friend/message/asr/asr/', formData, { signal: controller.signal })
     if (disposed || version !== recordingVersion || controller !== asrController) return;
     const data = res.data
-    if (data.result === 'success') {
+    if (data.result === 'success' && data.text?.trim()) {
       emit('send', null, data.text)
+    } else {
+      emit('state', 'idle')
+      emit('error', data.result === 'success' ? '没有听清楚，再说一次吧' : data.result || '语音识别失败')
     }
   } catch (err) {
     if (disposed || controller.signal.aborted || version !== recordingVersion) return;
@@ -95,7 +100,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="absolute bottom-4 left-2 right-2 h-12 flex items-center bg-black/30 backdrop-blur-sm rounded-2xl">
+  <div class="relative h-12 flex items-center bg-base-300 rounded-xl">
     <div v-if="isSpeaking" class="flex items-center justify-center gap-1 h-6 flex-1">
       <div
         v-for="i in 32" :key="i"
@@ -106,9 +111,9 @@ onBeforeUnmount(() => {
     <div v-else class="text-white/50 text-base w-full text-center">
       语音输入
     </div>
-    <div @click="emit('close')" class="absolute right-2 w-8 h-8 flex justify-center items-center cursor-pointer">
+    <button type="button" aria-label="切换文字输入" @click="emit('close'); emit('state', 'idle')" class="absolute right-2 w-8 h-8 flex justify-center items-center cursor-pointer">
       <KeyboardIcon />
-    </div>
+    </button>
   </div>
 
 </template>

@@ -9,6 +9,8 @@ import AppSpinner from "@/design/AppSpinner.vue";
 const friends = ref([])
 const isLoading = ref(false)
 const hasFriends = ref(true)
+const loadError = ref('')
+let disposed = false
 const sentinelRef = useTemplateRef('sentinel-ref')
 
 function checkSentinelVisible() {  // 判断哨兵是否能被看到
@@ -19,8 +21,9 @@ function checkSentinelVisible() {  // 判断哨兵是否能被看到
 }
 
 async function loadMore() {
-  if (isLoading.value || !hasFriends.value) return
+  if (disposed || isLoading.value || !hasFriends.value) return
   isLoading.value = true
+  loadError.value = ''
 
   let newFriends = []
   try{
@@ -29,14 +32,18 @@ async function loadMore() {
         items_count:friends.value.length,
       }
     })
+    if (disposed) return
     const data = res.data
+    if (data.result !== 'success') throw new Error(data.result)
     if (data.result === 'success') {
       newFriends = data.friends
     }
   } catch(err) {
-    console.log(err)
+    if (!disposed) loadError.value = '好友加载失败，请检查网络后重试'
   } finally {
+    if (disposed) return
     isLoading.value = false
+    if (loadError.value) return
     if (newFriends.length === 0) {
       hasFriends.value = false
     } else {
@@ -58,6 +65,7 @@ let observer = null
 onMounted(async () => {
   await loadMore()  // 加载新元素
 
+  if (disposed) return
   observer = new IntersectionObserver(
     entries => {
       entries.forEach(entry => {
@@ -74,6 +82,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  disposed = true
   observer?.disconnect()  // 解绑监听器
 })
 
@@ -90,6 +99,7 @@ onBeforeUnmount(() => {
       <AppSkeleton variant="card" :count="8" />
     </div>
 
+    <div v-else-if="loadError" role="alert" class="py-12 text-center"><p>{{ loadError }}</p><button class="btn btn-sm mt-3" @click="loadMore">重试</button></div>
     <AppEmpty
       v-else-if="friends.length === 0"
       title="还没有好友"

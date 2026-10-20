@@ -1,5 +1,5 @@
 <script setup lang="js">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, ref, watch } from 'vue'
 import api from '@/js/http/api.js'
 import { useUserStore } from '@/stores/user.js'
 import CharacterCard from '@/components/home/CharacterCard.vue'
@@ -13,8 +13,10 @@ const friends = ref([])
 const isLoading = ref(false)
 const latest = createLatestRequest()
 
-onMounted(async () => {
-  if (!user.isLogin()) return
+watch(() => user.isLogin(), async loggedIn => {
+  latest.invalidate()
+  friends.value = []
+  if (!loggedIn) return
   const seq = latest.next()
   isLoading.value = true
   try {
@@ -31,7 +33,7 @@ onMounted(async () => {
   } finally {
     if (latest.isLatest(seq)) isLoading.value = false
   }
-})
+}, { immediate: true })
 
 onBeforeUnmount(() => latest.invalidate())
 </script>

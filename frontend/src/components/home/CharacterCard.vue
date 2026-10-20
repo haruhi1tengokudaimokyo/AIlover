@@ -1,5 +1,4 @@
 <script setup lang="js">
-import ChatField from '@/components/character/chat_field/ChatField.vue'
 import RemoveIcon from '@/components/character/icons/RemoveIcon.vue'
 import AppButton from '@/design/AppButton.vue'
 import { useOpenChat } from '@/components/home/useOpenChat.js'
@@ -13,7 +12,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['remove'])
 
-const { chatFieldRef, friend, openChat } = useOpenChat()
+const { openChat, opening, openError } = useOpenChat()
 
 async function handleRemoveFriend() {
   if (!window.confirm('移除这个好友并删除关联聊天和记忆？此操作无法撤销，请先导出。')) return
@@ -30,17 +29,18 @@ async function handleRemoveFriend() {
 </script>
 
 <template>
+  <div class="min-w-0">
   <article
     class="group relative w-full cursor-pointer overflow-hidden rounded-box bg-surface shadow-card transition-all duration-250 ease-soft hover:-translate-y-1.5 hover:shadow-pop focus-visible:-translate-y-1.5"
     role="button"
     tabindex="0"
     :aria-label="`与${character.name}开始聊天`"
     @click="openChat(character.id)"
-    @keydown.enter="openChat(character.id)"
+    @keydown.enter.self="openChat(character.id)" @keydown.space.prevent.self="openChat(character.id)" :aria-busy="opening"
   >
     <div class="relative aspect-[3/4] overflow-hidden">
       <img
-        :src="character.background_image"
+        :src="character.background_image || character.photo"
         @error="avatarFallback"
         :alt="`${character.name}封面`"
         class="absolute inset-0 h-full w-full object-cover transition-transform duration-400 ease-soft group-hover:scale-105"
@@ -67,13 +67,15 @@ async function handleRemoveFriend() {
           </div>
           <h3 class="font-bold text-white text-base line-clamp-1 break-all drop-shadow">{{ character.name }}</h3>
         </div>
-        <p class="mt-2 text-sm text-white/80 line-clamp-2 break-all">{{ character.profile }}</p>
-        <div class="mt-3 opacity-0 translate-y-1 transition-all duration-250 ease-soft group-hover:opacity-100 group-hover:translate-y-0">
+        <p class="mt-2 text-sm text-white/80 line-clamp-2 break-all">{{ character.description || character.profile }}</p>
+        <div class="mt-3 transition-all duration-250 ease-soft group-hover:opacity-100 group-hover:translate-y-0">
           <!-- 点击会冒泡到卡片触发 openChat，按钮本身不再重复绑定 -->
           <AppButton size="sm" tabindex="-1">开始聊天</AppButton>
         </div>
       </div>
     </div>
   </article>
-  <ChatField ref="chatFieldRef" :friend="friend" />
+  <div v-if="character.author" class="mt-2 flex justify-between px-1 text-[11px] text-text-dim"><RouterLink :to="{ name: 'user-space-index', params: { user_id: character.author.user_id } }">{{ character.author.username }}</RouterLink><span>AI companion</span></div>
+  <p v-if="openError" role="alert" class="text-error text-xs mt-2">{{ openError }}</p>
+  </div>
 </template>

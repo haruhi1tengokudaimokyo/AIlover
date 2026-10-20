@@ -341,3 +341,64 @@ class SpeechTests(TestCase):
                     yield json.dumps({'header': {'event': 'task-finished'}})
                 return packets()
         self.assertEqual(asyncio.run(ASRView().asr_receiver(Socket())), '你好。我回来了。')
+
+
+class GetSingleFriendTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='owner', password='testing123')
+        self.other = User.objects.create_user(username='stranger', password='testing123')
+        self.profile = UserProfile.objects.create(user=self.user)
+        self.other_profile = UserProfile.objects.create(user=self.other)
+        self.character = Character.objects.create(
+            author=self.profile, name='绯华', profile='嘴硬心软', greeting='你来啦。', slug='hika')
+        self.friend = Friend.objects.create(me=self.profile, character=self.character)
+        self.client = APIClient()
+
+    def url(self):
+        return '/api/friend/get_single/'
+
+    def test_owner_gets_friend_with_character_payload(self):
+        self.client.force_authenticate(self.user)
+        with patch('web.views.friend.assets.portrait_map', return_value={'hika': '/media/character/portraits/hika.png'}), \
+                patch('web.views.friend.assets.os.path.isfile', return_value=True):
+            response = self.client.get(self.url(), {'friend_id': self.friend.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['result'], 'success')
+        self.assertEqual(response.data['friend']['id'], self.friend.id)
+        character = response.data['friend']['character']
+        self.assertEqual(character['name'], '绯华')
+        self.assertEqual(character['slug'], 'hika')
+        self.assertEqual(character['assets'], {'portrait_url': '/media/character/portraits/hika.png'})
+
+    def test_portrait_degrades_to_none_when_mapping_or_file_missing(self):
+        self.client.force_authenticate(self.user)
+        # 映射表读不到（返回空表）时 assets 静默降级，接口仍 200
+        with patch('web.views.friend.assets.portrait_map', return_value={}):
+            response = self.client.get(self.url(), {'friend_id': self.friend.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.data['friend']['character']['assets']['portrait_url'])
+        # 表里有条目但文件缺失同样降级
+        with patch('web.views.friend.assets.portrait_map', return_value={'hika': '/media/character/portraits/hika.png'}), \
+                patch('web.views.friend.assets.os.path.isfile', return_value=False):
+            response = self.client.get(self.url(), {'friend_id': self.friend.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.data['friend']['character']['assets']['portrait_url'])
+
+    def test_not_found_returns_404(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.url(), {'friend_id': self.friend.id + 999})
+        self.assertEqual(response.status_code, 404)
+
+    def test_other_users_friend_returns_403(self):
+        self.client.force_authenticate(self.other)
+        response = self.client.get(self.url(), {'friend_id': self.friend.id})
+        self.assertEqual(response.status_code, 403)
+
+    def test_invalid_friend_id_returns_400(self):
+        self.client.force_authenticate(self.user)
+        response = self.client.get(self.url(), {'friend_id': 'abc'})
+        self.assertEqual(response.status_code, 400)
+
+    def test_anonymous_is_rejected(self):
+        response = self.client.get(self.url(), {'friend_id': self.friend.id})
+        self.assertIn(response.status_code, (401, 403))
