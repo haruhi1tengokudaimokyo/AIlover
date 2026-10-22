@@ -35,6 +35,10 @@ def normalized_profile(profile):
 
 
 def validation_error(record, source):
+    if not isinstance(record, dict):
+        return 'invalid_record'
+    if not isinstance(record.get('id'), str):
+        return 'invalid_record_id'
     if record.get('mock') or record.get('qc_note') or record.get('qc_reason'):
         return 'mock_or_qc_placeholder'
     if not source or record.get('character') != 'mugi':
@@ -45,7 +49,7 @@ def validation_error(record, source):
     if not isinstance(text, str) or not text.strip() or KANA.search(text) or text == source['text']:
         return 'target_not_translated_to_chinese'
     context = record.get('context_zh')
-    if not isinstance(context, list):
+    if not isinstance(context, list) or any(not isinstance(item, dict) for item in context):
         return 'invalid_context'
     expected = [c['id'] for c in source.get('context', [])]
     if [c.get('id') for c in context] != expected:
@@ -90,7 +94,8 @@ def build(translated_path):
     samples, rejected, accepted_ids = [], Counter(), set()
     module.EMPTY_CONTEXT_OPENERS['mugi'] = '麦，陪我聊会儿吧。'
     for record in translations:
-        reason = validation_error(record, originals.get(record.get('id')))
+        ident = record.get('id') if isinstance(record, dict) else None
+        reason = validation_error(record, originals.get(ident) if isinstance(ident, str) else None)
         if reason:
             rejected[reason] += 1
             continue

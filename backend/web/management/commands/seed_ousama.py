@@ -26,6 +26,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 
 from web.models.character import Character
 from web.models.friend import SystemPrompt
@@ -65,6 +66,7 @@ class Command(BaseCommand):
         parser.add_argument('--username', type=str, default=None, help='角色所属用户的用户名')
         parser.add_argument('--slug', choices=['hika', 'ayame', 'mugi'], help='只创建或更新指定角色')
 
+    @transaction.atomic
     def handle(self, *args, **options):
         cards_dir = Path(settings.BASE_DIR) / 'seed_cards'
         cards = [json.loads(path.read_text(encoding='utf-8')) for path in sorted(cards_dir.glob('*.json'))]

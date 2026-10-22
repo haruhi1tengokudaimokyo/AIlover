@@ -46,3 +46,12 @@ finetune_data/mugi/tts/qa_report.md
 finetune_data/mugi/llm/source/
 finetune_data/mugi/llm/output/
 backend/story_data-backup-*/
+
+# Private local training handoff archives and indexes.
+/AIlover_*训练交接包_*.zip
+/AIlover_训练交接包校验_*.json
+/AIlover_训练交接包_先看这里_*.md
+extracted/chinese_patch_20261022/
+/AIlover_*中文*包_v2_*.zip
+/AIlover_全中文方案_*.md
+/AIlover_全中文方案_*.json

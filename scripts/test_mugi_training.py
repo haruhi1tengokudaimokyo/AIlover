@@ -76,6 +76,13 @@ class TrainingSafeguards(unittest.TestCase):
         translated['text_src'] = 'Something from another script.'
         self.assertEqual(llm.validation_error(translated, source), 'source_mismatch')
 
+    def test_malformed_translation_does_not_abort_the_whole_batch(self):
+        source, translated = self.fixture()
+        self.assertEqual(llm.validation_error(None, source), 'invalid_record')
+        self.assertEqual(llm.validation_error(dict(translated, id=[]), source), 'invalid_record_id')
+        translated['context_zh'] = [None]
+        self.assertEqual(llm.validation_error(translated, source), 'invalid_context')
+
 
 if __name__ == '__main__':
     unittest.main()

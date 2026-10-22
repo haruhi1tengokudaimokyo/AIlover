@@ -75,6 +75,12 @@ class MugiSeedTests(TestCase):
         self.assertFalse(Character.objects.filter(slug='mugi').exists())
         self.assertEqual(SystemPrompt.objects.count(), 0)
 
+    def test_unknown_owner_rolls_back_default_prompts(self):
+        with self.assertRaises(CommandError):
+            call_command('seed_ousama', slug='mugi', username='missing-owner', stdout=io.StringIO())
+        self.assertEqual(SystemPrompt.objects.count(), 0)
+        self.assertFalse(Character.objects.filter(slug='mugi').exists())
+
     def test_mugi_payload_uses_original_game_assets_and_topics(self):
         self.seed()
         mapping = {'mugi': {'url': '/media/character/stage/mugi-portrait.webp',
