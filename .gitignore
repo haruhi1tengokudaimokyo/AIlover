@@ -34,3 +34,15 @@ extracted/stage_metadata/
 
 # Local UI captures may include game art; deliver locally, do not publish by default.
 docs/screenshots/
+
+# 麦的新增原作语料、训练音频、翻译输出和克隆参考只在本地保留。
+extracted/characters/mugi/
+backend/web/documents/character_lines/mugi.jsonl
+backend/seed_assets/mugi/
+finetune_data/mugi/tts/dataset/
+finetune_data/mugi/tts/reference/
+finetune_data/mugi/tts/mugi.list
+finetune_data/mugi/tts/qa_report.md
+finetune_data/mugi/llm/source/
+finetune_data/mugi/llm/output/
+backend/story_data-backup-*/

@@ -1,8 +1,10 @@
 """Build local game portraits from the game's actual body/face/accessory layers.
 
 No AI generation and no database writes. Outputs remain in gitignored media/.
-Character IDs come from Init_VariableADV.ks: 2=緋華, 8=菖蒲.
-Outfit layers follow Init_VariableSTAND.ks dr=1 and Macro_Stand.ks pimage order.
+Character IDs come from Init_VariableADV.ks: 1=むぎ, 2=緋華, 8=菖蒲.
+Outfit layers follow Init_VariableSTAND.ks and Macro_Stand.ks pimage order.
+Mugi uses the maid outfit from the opening scene 0_1.ks (dr4, f=111),
+whose body is 8 and has no accessory layers. Hika/Ayame retain dr1.
 """
 import argparse
 import hashlib
@@ -13,7 +15,27 @@ from tlg import tlg_to_image
 from xp3 import extract_file, parse_index
 
 ROOT = Path(__file__).resolve().parent.parent
-CHARACTERS = {'hika': (2, 'bg1_0.png'), 'ayame': (8, 'bg4_0.png')}
+CHARACTERS = {
+    'hika': {'number': 2, 'body': 2, 'accessories': (1,), 'background': 'bg1_0.png'},
+    'ayame': {'number': 8, 'body': 2, 'accessories': (1,), 'background': 'bg4_0.png'},
+    'mugi': {'number': 1, 'body': 8, 'accessories': (), 'background': 'bg5_0.png'},
+}
+
+
+def layer_names(character):
+    number = character['number']
+    return [f"2/stb{number}_s2_1_{character['body']}.tlg", f'2/st{number}_s2_1_1.tlg',
+            *(f'2/stp{number}_s2_1_{part}.tlg' for part in character['accessories'])]
+
+
+def load_provenance(path):
+    """Keep other characters' evidence when preparing one new character."""
+    if not path.exists():
+        return {}
+    evidence = json.loads(path.read_text(encoding='utf-8'))
+    if not isinstance(evidence, dict):
+        raise ValueError('Invalid existing game asset provenance')
+    return evidence
 
 
 def composite_layers(body, face, accessories=()):
@@ -30,6 +52,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--game-dir', type=Path, default=ROOT / '国王恋爱')
     parser.add_argument('--media-dir', type=Path, default=ROOT / 'backend/media')
+    parser.add_argument('--character', action='append', choices=tuple(CHARACTERS),
+                        help='Prepare only this character; repeat for multiple characters (default: all)')
     options = parser.parse_args()
     cache = ROOT / 'extracted/stage_metadata'
     cache.mkdir(parents=True, exist_ok=True)
@@ -38,9 +62,12 @@ def main():
     backgrounds = {entry[0]: entry for entry in parse_index(background_archive)}
     output = options.media_dir / 'character/stage'
     output.mkdir(parents=True, exist_ok=True)
-    evidence = {}
-    for slug, (number, background_name) in CHARACTERS.items():
-        names = [f'2/stb{number}_s2_1_2.tlg', f'2/st{number}_s2_1_1.tlg', f'2/stp{number}_s2_1_1.tlg']
+    provenance_path = output / 'provenance.json'
+    evidence = load_provenance(provenance_path)
+    for slug in dict.fromkeys(options.character or CHARACTERS):
+        character = CHARACTERS[slug]
+        number, background_name = character['number'], character['background']
+        names = layer_names(character)
         layers, hashes = [], {}
         for name in names:
             source = cache / Path(name).name
@@ -71,7 +98,7 @@ def main():
                           'background': background_name, 'portrait_size': rendered.size,
                           'alpha_extrema': rendered.getchannel('A').getextrema()}
         print(f'Prepared {slug}: {rendered.width}x{rendered.height}', flush=True)
-    (output / 'provenance.json').write_text(json.dumps(evidence, indent=2), encoding='utf-8')
+    provenance_path.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
 
 
 if __name__ == '__main__':

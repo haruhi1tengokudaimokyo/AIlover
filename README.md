@@ -117,11 +117,13 @@ cd .. && .venv/Scripts/python scripts/sync_template.py   # 同步首页模板
 
 ---
 
-## 五、《王様恋愛》角色：绯华 与 菖蒲
+## 五、《王様恋愛》角色：绯华、菖蒲与麦
 
 从游戏 `国王恋爱/`（ASa Project《王様恋愛》，Kirikiri/XP3 引擎）提取资源，
 将台词最多的两位女主角——佐藤绯华（vo2，2410 条语音）和藤丘菖蒲（vo8，1792 条语音）——
-做成了聊天角色。**不涉及任何模型微调**，角色还原靠三层：角色卡提示词 + 原作台词 RAG + 声音复刻。
+做成了聊天角色。2026-10-22 补齐第一位女仆麦（むぎ，vo1）的材料和角色。
+当前聊天使用角色卡提示词与原作台词 RAG；训练数据已经准备，模型微调和原声克隆尚未实际执行。
+麦的独立材料见 [微调准备包](finetune_data/mugi/README.md)，完整接入与验收见 [麦的交付记录](docs/MUGI_DELIVERY.md)。
 
 ### 资源提取（已完成）
 
@@ -129,21 +131,26 @@ cd .. && .venv/Scripts/python scripts/sync_template.py   # 同步首页模板
 .venv/Scripts/python scripts/xp3.py list "国王恋爱/voice.xp3"        # 列出 XP3 内容
 .venv/Scripts/python scripts/xp3.py extract "国王恋爱/voice.xp3" extracted/voice vo2_   # 绯华语音
 .venv/Scripts/python scripts/parse_scenario.py                       # 解析剧本 -> extracted/corpus.jsonl
-.venv/Scripts/python scripts/build_character_data.py                 # 清洗语料（已剔除 R18）-> extracted/characters/
+.venv/Scripts/python scripts/build_character_data.py                 # 原两位的启发式台词清洗
+.venv/Scripts/python scripts/prepare_mugi_training.py                # 麦的来源、台词、TTS、参考音频与 LLM 准备
 ```
 
 产物：
 - `extracted/voice/vo2_*.opus`、`vo8_*.opus`：两位女主全部语音（仅个人学习使用）
 - `extracted/characters/<slug>/lines_clean.jsonl`：干净台词库（绯华 1910 条 / 菖蒲 1303 条）
 - `extracted/characters/<slug>/ref_candidates.txt`：声音复刻候选片段
+- `extracted/voice/vo1_*.opus`：麦的 1776 条原始语音；清洗语料、统计与来源在 `extracted/characters/mugi/`
+- `finetune_data/mugi/`：麦的独立 TTS 和 LLM 材料、质检与重建入口，不覆盖前两位
 
 ### 接入应用（三步）
 
 ```bash
+.venv/Scripts/python scripts/prepare_game_stage.py    # 在项目根准备三位角色的本地游戏美术
 cd backend
 ../.venv/Scripts/python manage.py migrate
-../.venv/Scripts/python manage.py seed_ousama          # 注册账号后执行，创建绯华和菖蒲
-../.venv/Scripts/python manage.py build_style_index    # 需要 API_KEY：构建台词向量索引（风格 RAG）
+../.venv/Scripts/python manage.py seed_ousama          # 注册账号后执行，创建三位角色
+# 仅添加/更新麦：manage.py seed_ousama --slug mugi
+# 可选旧风格向量索引：manage.py build_style_index --slug mugi（调用嵌入 API）
 ```
 
 - 角色卡：`backend/seed_cards/<slug>.json`（性格、口癖、示例对话、开场白、快捷话题，可手改后重跑 seed 生效）
@@ -155,17 +162,17 @@ cd backend
 `backend/seed_assets/<slug>/voice_ref.opus`（+ 对应台词文本 `voice_ref.txt`）已备好：
 
 - **方式 A（百炼声音复刻）**：上传 voice_ref 音频，得到音色 ID 填入 `.env` 的
-  `HIKA_VOICE` / `AYAME_VOICE`，重跑 `seed_ousama`。
-- **方式 B（本地 GPT-SoVITS，效果最好）**：把 `voice_ref.opus` 作为参考音频、
+  `HIKA_VOICE` / `AYAME_VOICE` / `MUGI_VOICE`，重跑对应角色的 `seed_ousama --slug`。
+- **方式 B（本地 GPT-SoVITS）**：把参考 WAV 作为参考音频、
   `voice_ref.txt` 作为参考文本接入 GPT-SoVITS `api_v2.py`，替换 chat.py 中的 TTS 调用。
 
 > 版权提示：游戏剧本、语音与角色形象属于 ASa Project，以上全部内容仅供个人非商用学习。
 
-### 图片资源（尚未处理）
+### 图片资源（本地已准备）
 
-`bgimage.xp3`（背景 313MB）、`stimage.xp3`（立绘 752MB）、`evimage.xp3`（事件 CG 1.4GB）
-尚未提取。提取后把角色立绘/背景放到 `backend/seed_assets/<slug>/photo.jpg` 和
-`background.jpg`，重跑 `seed_ousama` 即可替换占位图（注意自行过滤 R18 CG）。
+`scripts/prepare_game_stage.py` 按原作的身体、表情与配件坐标组合透明立绘，并准备头像和场景背景。
+输出在 `backend/media/character/stage/`，统一通过 `portrait_map.json` 提供给角色大厅和聊天工作区。
+只补麦时使用 `--character mugi`，保留前两位的图片和来源记录；游戏美术不随 Git 提交。
 
 ## Story-Aware RAG 技术升级（Phase 1）
 

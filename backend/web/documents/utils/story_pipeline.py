@@ -10,7 +10,10 @@ from collections import Counter
 from pathlib import Path
 
 ALIASES = {'緋華': 'hika', '佐藤緋華': 'hika', '绯华': 'hika',
-           '菖蒲': 'ayame', '藤ヶ丘菖蒲': 'ayame'}
+           '菖蒲': 'ayame', '藤ヶ丘菖蒲': 'ayame',
+           'むぎ': 'mugi', '麦': 'mugi', '小麦': 'mugi'}
+# The alias set is part of parsed records; old caches lack mugi's identity.
+PARSER_VERSION = 2
 CONTROL = {'if', 'else', 'elsif', 'endif', 'eval', 'c', 'r', 'hh',
            'layopt', 'jump', 'call', 'return', 'icHeart'}
 TAG = re.compile(r'\[([^\]]+)\]')
@@ -138,7 +141,7 @@ def parse_script(path, root):
     return rows, audit
 
 
-def build_bundle(root, output, review=None, voice_root=None, usable=None, previous=None):
+def build_bundle(root, output, review=None, voice_root=None, usable=None, previous=None, character_filters=None):
     """Publish immutable build directories. Review sidecar is never modified."""
     root, output = Path(root), Path(output)
     if output.exists():
@@ -162,13 +165,13 @@ def build_bundle(root, output, review=None, voice_root=None, usable=None, previo
             source = path.relative_to(root).as_posix()
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             prior = old.get(source)
-            if prior and prior.get('parser_version') == 1 and prior.get('source_sha256') == digest:
+            if prior and prior.get('parser_version') == PARSER_VERSION and prior.get('source_sha256') == digest:
                 rows, audit = prior['rows'], prior['issues']
                 reused += 1
             else:
                 rows, audit = parse_script(path, root)
             # Serialize before applying sidecar corrections so cached parser output stays raw.
-            cache.append(json.dumps(dict(source_file=source, source_sha256=digest, parser_version=1,
+            cache.append(json.dumps(dict(source_file=source, source_sha256=digest, parser_version=PARSER_VERSION,
                                          rows=rows, issues=audit), ensure_ascii=False) + '\n')
             all_rows.extend(rows)
             issues.extend(audit)
@@ -201,9 +204,13 @@ def build_bundle(root, output, review=None, voice_root=None, usable=None, previo
             voices.append(dict(id=row['id'], voice_id=row['voice_id'],
                                audio_path=str(audio) if audio and audio.is_file() else None,
                                source_file=row['source_file'], source_location=row['source_location']))
-        if row['character'] and row['evidence_type'] == 'dialogue' and (usable is None or usable(row['text'])):
+        character_filter = (character_filters or {}).get(row['character'])
+        if (row['character'] and row['evidence_type'] == 'dialogue'
+                and (usable is None or usable(row['text']))
+                and (character_filter is None or character_filter(row))):
             sample = dict(row, evidence_type='style', style_labels=[], reviewed=row.get('reviewed', False))
-            sample['context'] = [c for c in sample['context'] if usable is None or usable(c['text'])]
+            sample['context'] = [c for c in sample['context'] if (usable is None or usable(c['text']))
+                                 and (character_filter is None or character_filter(c))]
             examples.append(sample)
     lore = []
     for fact in sidecar.get('lore', []):

@@ -23,7 +23,7 @@ let disposed = false
 
 const searchQuery = computed(() => String(route.query.q || '').trim())
 // 搜索状态下不展示精选区，全部结果进网格
-const featured = computed(() => searchQuery.value ? [] : [...characters.value].sort((a, b) => Number(Boolean(b.assets?.portrait_url)) - Number(Boolean(a.assets?.portrait_url))).slice(0, 2))
+const featured = computed(() => searchQuery.value ? [] : [...characters.value].sort((a, b) => Number(Boolean(b.assets?.portrait_url)) - Number(Boolean(a.assets?.portrait_url))).slice(0, 3))
 const gridCharacters = computed(() => searchQuery.value ? characters.value : characters.value.filter(character => !featured.value.some(item => item.id === character.id)))
 
 function checkSentinelVisible() {
@@ -131,8 +131,8 @@ onBeforeUnmount(() => {
     <form class="lobby-search" @submit.prevent="$router.push({ query: { q: $event.target.elements.search.value.trim() } })">
       <span aria-hidden="true">⌕</span><input name="search" :value="searchQuery" placeholder="寻找想见的角色，或一种心动的感觉…" aria-label="搜索角色"><button>寻找角色 ↗</button>
     </form>
-    <!-- 精选角色 hero 区（前 2 个角色，搜索时隐藏） -->
-    <section v-if="featured.length" class="grid gap-5 md:gap-6 lg:grid-cols-2 animate-rise-in" aria-label="精选角色">
+    <!-- 三位游戏角色共享同样的立绘精选卡，搜索时进入统一结果列表。 -->
+    <section v-if="featured.length" class="grid gap-5 md:gap-6 lg:grid-cols-3 animate-rise-in" aria-label="精选角色">
       <HeroCharacterCard v-for="character in featured" :key="character.id" :character="character" />
     </section>
 

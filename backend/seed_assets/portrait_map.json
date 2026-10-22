@@ -7,6 +7,14 @@
     "display_ready": true,
     "source": "Local game layers; scripts/prepare_game_stage.py; assets excluded from Git"
   },
+  "mugi": {
+    "url": "/media/character/stage/mugi-portrait.webp",
+    "photo_url": "/media/character/stage/mugi-avatar.webp",
+    "background_url": "/media/character/stage/mugi-background.webp",
+    "theme_color": "#e0b9fb",
+    "display_ready": true,
+    "source": "Local game layers; scripts/prepare_game_stage.py; assets excluded from Git"
+  },
   "ayame": {
     "url": "/media/character/stage/ayame-portrait.webp",
     "photo_url": "/media/character/stage/ayame-avatar.webp",

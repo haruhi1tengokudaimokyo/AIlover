@@ -1,0 +1,19 @@
+{
+  "speaker": "むぎ",
+  "slug": "mugi",
+  "voice_prefix": "vo1_",
+  "raw_dialogue": 1719,
+  "clean_dialogue": 1140,
+  "filtered_dialogue": 579,
+  "legacy_token_clean_dialogue": 1381,
+  "explicit_intimate_scene_label": "H_Start (raw retained, training excluded)",
+  "voiced_clean_dialogue": 1140,
+  "archive_audio_files": 1776,
+  "source_files": 66,
+  "parser_issues_total": 250,
+  "llm_source_records": 1140,
+  "llm_context_policy": "only safe, same-segment preceding dialogue; no target/future lines",
+  "missing_source_voice_ids": [],
+  "training_performed": false,
+  "api_calls": 0
+}

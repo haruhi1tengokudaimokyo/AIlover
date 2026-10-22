@@ -1,0 +1,44 @@
+{
+  "checked_at_utc": "2026-10-22T10:35:55.840422+00:00",
+  "clean_sha256": "bff51286900fea4e8745edfb6eaececc99585016c45ae34847a6b622ed79c260",
+  "clean_records": 1140,
+  "wave_files": 1140,
+  "llm_source_records": 1140,
+  "chinese_adaptation_seed_samples": 5,
+  "training_labels": 1038,
+  "duration_seconds": 4584.739,
+  "duration_hours": 1.274,
+  "duration_excluded": 102,
+  "wrong_audio_format": [],
+  "rms_below_100": 0,
+  "peak_at_or_above_0_98": 3,
+  "duplicate_training_paths": 0,
+  "references": [
+    {
+      "file": "tts/reference/mugi_ref_1.wav",
+      "source_voice_id": "vo1_0002",
+      "duration_seconds": 5.14325,
+      "rms": 5579.0,
+      "peak_ratio": 0.767120361328125
+    },
+    {
+      "file": "tts/reference/mugi_ref_2.wav",
+      "source_voice_id": "vo1_0262",
+      "duration_seconds": 5.131625,
+      "rms": 5864.0,
+      "peak_ratio": 0.834075927734375
+    },
+    {
+      "file": "tts/reference/mugi_ref_3.wav",
+      "source_voice_id": "vo1_0032",
+      "duration_seconds": 6.39421875,
+      "rms": 5889.0,
+      "peak_ratio": 0.7318115234375
+    }
+  ],
+  "prior_hika_ayame_and_training_files_checked": 3188,
+  "prior_files_changed": [],
+  "transcription_manually_listened": false,
+  "models_trained": false,
+  "external_api_calls": 0
+}

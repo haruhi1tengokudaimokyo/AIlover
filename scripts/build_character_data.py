@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-为《王様恋愛》的两位女主角构建聊天 agent 用的干净语料。
+为《王様恋愛》的角色构建聊天 agent 用的干净语料。
 
     python scripts/build_character_data.py
 
@@ -14,6 +14,7 @@
     extracted/characters/<slug>/stats.txt           自称/称呼/语尾统计
     extracted/characters/<slug>/sample_lines.txt    随机抽样台词（供人工撰写角色卡）
 """
+import argparse
 import json
 import random
 import re
@@ -27,6 +28,7 @@ OUT_ROOT = Path('extracted/characters')
 CHARACTERS = {
     'hika': {'char': '緋華', 'full_name': '佐藤緋華'},
     'ayame': {'char': '菖蒲', 'full_name': '藤ヶ丘菖蒲'},
+    'mugi': {'char': 'むぎ', 'full_name': '麦'},
 }
 
 # 显性内容行级过滤（命中即整行丢弃；●/○ 是官方自我规制的打码，出现即丢弃）
@@ -67,19 +69,32 @@ def is_usable(t: str) -> bool:
 
 
 def main():
-    rows = [json.loads(l) for l in open(CORPUS, encoding='utf-8')]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--char', action='append', choices=CHARACTERS,
+                        help='只构建指定角色；不传时保留原 hika/ayame 行为')
+    parser.add_argument('--corpus', type=Path, default=CORPUS)
+    parser.add_argument('--out-root', type=Path, default=OUT_ROOT)
+    args = parser.parse_args()
+    rows = [json.loads(l) for l in args.corpus.read_text(encoding='utf-8').splitlines() if l.strip()]
     random.seed(42)
 
-    for slug, info in CHARACTERS.items():
+    for slug in args.char or ('hika', 'ayame'):
+        info = CHARACTERS[slug]
         name = info['char']
-        out_dir = OUT_ROOT / slug
+        out_dir = args.out_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
 
         mine = [r for r in rows if r['char'] == name]
+        if slug == 'mugi' and any('label' not in r or not r.get('source_sha256') for r in mine):
+            parser.error('麦的安全提取需要带标签和来源哈希的新解析记录；请运行 scripts/prepare_mugi_training.py')
         kept, dropped = [], 0
         for r in mine:
             t = clean_text(r['text'])
-            if not is_usable(t):
+            usable = is_usable(t)
+            if slug == 'mugi':
+                from mugi_filter import mugi_training_usable
+                usable = usable and mugi_training_usable(r)
+            if not usable:
                 dropped += 1
                 continue
             voice_path = None

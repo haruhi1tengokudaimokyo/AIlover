@@ -1,0 +1,9 @@
+{
+  "source_records": 1140,
+  "chinese_adaptation_seed_samples": 5,
+  "accepted_real_translated_samples": 0,
+  "rejected_records": {},
+  "full_translation_status": "not_started",
+  "seed_is_game_translation": false,
+  "training_performed": false
+}

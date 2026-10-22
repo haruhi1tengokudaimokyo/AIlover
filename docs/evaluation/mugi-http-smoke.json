@@ -1,0 +1,44 @@
+{
+  "scope": "isolated local database under real Windows user; HTTP/API/media contracts only; no browser clicks",
+  "network": "localhost only",
+  "character_slug": "mugi",
+  "homepage_search": 200,
+  "friend_load": 200,
+  "chat_route": 200,
+  "frontend_build_entry": "/static/frontend/assets/index-Bus8nIhT.js",
+  "build_entry_status": 200,
+  "assets": {
+    "portrait": {
+      "status": 200,
+      "url": "/media/character/stage/mugi-portrait.webp",
+      "size": [
+        559,
+        1600
+      ],
+      "mode": "RGBA",
+      "bytes": 142148
+    },
+    "avatar": {
+      "status": 200,
+      "url": "/media/character/stage/mugi-avatar.webp",
+      "size": [
+        384,
+        384
+      ],
+      "mode": "RGBA",
+      "bytes": 39286
+    },
+    "background": {
+      "status": 200,
+      "url": "/media/character/stage/mugi-background.webp",
+      "size": [
+        1600,
+        900
+      ],
+      "mode": "RGB",
+      "bytes": 113164
+    }
+  },
+  "real_model_calls": 0,
+  "real_user_messages_written": 0
+}

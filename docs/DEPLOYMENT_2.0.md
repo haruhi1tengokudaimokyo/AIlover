@@ -12,7 +12,7 @@ cd D:\AIlover
 .venv/Scripts/python.exe backend/manage.py runserver 127.0.0.1:8000
 ```
 
-访问 `http://127.0.0.1:8000/`。模型与语音仍使用现有 `.env` 配置；没有新增浏览器端密钥。游戏素材准备脚本读取本地游戏资源，输出到被 Git 忽略的 media 目录，不写数据库。已有角色卡的 slug 需为 `hika` / `ayame`；不会创建新角色。
+访问 `http://127.0.0.1:8000/`。模型与语音仍使用现有 `.env` 配置；没有新增浏览器端密钥。游戏素材准备脚本读取本地游戏资源，输出到被 Git 忽略的 media 目录，不写数据库。角色卡 slug 为 `hika` / `ayame` / `mugi`；新增麦使用 `backend/manage.py seed_ousama --slug mugi`，完整材料与验证见 [麦的交付记录](MUGI_DELIVERY.md)。
 
 前后端开发分开运行：Django 使用 8000，另一终端在 frontend 运行 `npm run dev`，访问 5173。Vite 默认代理到 8000。桌面版继续使用 `launcher.py` 和原有 PyInstaller spec；本轮没有重新生成 EXE。
 

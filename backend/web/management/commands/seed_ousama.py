@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-一键创建《王様恋愛》角色卡：佐藤绯华（hika）、藤丘菖蒲（ayame）。
+一键创建《王様恋愛》角色卡：绯华（hika）、菖蒲（ayame）、麦（mugi）。
 
 用法：
     python manage.py seed_ousama                  # 绑定到第一个注册用户
     python manage.py seed_ousama --username bob   # 绑定到指定用户
+    python manage.py seed_ousama --slug mugi      # 仅补齐麦，不更新其他角色
 
 角色卡内容来自 backend/seed_cards/<slug>.json：
     name / profile / greeting / quick_replies / voice_env / voice_default
@@ -16,7 +17,7 @@
     voice_ref.txt    参考音频对应台词文本
 
 音色：在百炼控制台「声音复刻」上传 voice_ref 音频得到音色 ID 后，
-填入环境变量 HIKA_VOICE / AYAME_VOICE 并重新运行本命令即可生效。
+填入环境变量 HIKA_VOICE / AYAME_VOICE / MUGI_VOICE 并重新运行本命令即可生效。
 """
 import json
 from pathlib import Path
@@ -58,12 +59,26 @@ PLACEHOLDER_COLORS = {
 
 
 class Command(BaseCommand):
-    help = '创建《王様恋愛》绯华、菖蒲角色卡与默认系统提示词'
+    help = '创建《王様恋愛》绯华、菖蒲、麦角色卡；--slug 只更新一位'
 
     def add_arguments(self, parser):
         parser.add_argument('--username', type=str, default=None, help='角色所属用户的用户名')
+        parser.add_argument('--slug', choices=['hika', 'ayame', 'mugi'], help='只创建或更新指定角色')
 
     def handle(self, *args, **options):
+        cards_dir = Path(settings.BASE_DIR) / 'seed_cards'
+        cards = [json.loads(path.read_text(encoding='utf-8')) for path in sorted(cards_dir.glob('*.json'))]
+        cards = [card for card in cards if card.get('slug') and
+                 (not options.get('slug') or card['slug'] == options['slug'])]
+        if not cards:
+            raise CommandError('找不到指定角色卡')
+        stage = Path(settings.MEDIA_ROOT) / 'character/stage'
+        mugi_assets = Path(settings.BASE_DIR) / 'seed_assets/mugi'
+        # 麦必须使用本地游戏素材，禁止落到旧的程序生成占位头像。
+        if any(card['slug'] == 'mugi' for card in cards):
+            for staged, seeded in (('mugi-avatar.webp', 'photo.jpg'), ('mugi-background.webp', 'background.jpg')):
+                if not (stage / staged).is_file() and not (mugi_assets / seeded).is_file():
+                    raise CommandError('请先运行 scripts/prepare_game_stage.py --character mugi 提取麦的原作素材')
         # 1. 系统提示词（仅当不存在时创建）
         if not SystemPrompt.objects.filter(title='回复').exists():
             SystemPrompt.objects.create(title='回复', order_number=1, prompt=ROLEPLAY_PROMPT)
@@ -85,17 +100,15 @@ class Command(BaseCommand):
         profile, _ = UserProfile.objects.get_or_create(user=user)
 
         # 3. 逐个角色卡创建/更新
-        cards_dir = Path(settings.BASE_DIR) / 'seed_cards'
         import os
-        for card_path in sorted(cards_dir.glob('*.json')):
-            card = json.loads(card_path.read_text(encoding='utf-8'))
-            if 'slug' not in card:
-                continue
+        for card in cards:
             slug = card['slug']
-            character, created = Character.objects.get_or_create(
-                author=profile, name=card['name'],
-                defaults={'profile': card['profile']},
-            )
+            # Keep identity stable when the user has edited the display name.
+            character = Character.objects.filter(author=profile, slug=slug).first()
+            created = character is None
+            if character is None:
+                character, created = Character.objects.get_or_create(
+                    author=profile, name=card['name'], slug='', defaults={'profile': card['profile']})
             character.profile = card['profile']
             character.slug = slug
             character.greeting = card.get('greeting', '')
@@ -107,16 +120,20 @@ class Command(BaseCommand):
             colors = PLACEHOLDER_COLORS.get(slug, PLACEHOLDER_COLORS['hika'])
             if not character.photo:
                 photo = assets / 'photo.jpg'
+                if slug == 'mugi' and (stage / 'mugi-avatar.webp').is_file():
+                    photo = stage / 'mugi-avatar.webp'
                 if photo.exists():
                     with photo.open('rb') as f:
-                        character.photo.save(f'{slug}_photo.jpg', File(f), save=False)
+                        character.photo.save(f'{slug}_photo{photo.suffix}', File(f), save=False)
                 else:
                     character.photo.save(f'{slug}_photo.png', self._placeholder_photo(colors), save=False)
             if not character.background_image:
                 bg = assets / 'background.jpg'
+                if slug == 'mugi' and (stage / 'mugi-background.webp').is_file():
+                    bg = stage / 'mugi-background.webp'
                 if bg.exists():
                     with bg.open('rb') as f:
-                        character.background_image.save(f'{slug}_bg.jpg', File(f), save=False)
+                        character.background_image.save(f'{slug}_bg{bg.suffix}', File(f), save=False)
                 else:
                     character.background_image.save(f'{slug}_bg.png', self._placeholder_bg(colors), save=False)
             character.save()
@@ -127,7 +144,7 @@ class Command(BaseCommand):
         self.stdout.write(
             '接下来在应用里「添加好友」选择角色即可开始聊天。\n'
             '想让角色用自己的声音说话：把 seed_assets/<slug>/voice_ref.opus 上传到百炼控制台\n'
-            '「声音复刻」得到音色 ID，填进 .env 的 HIKA_VOICE / AYAME_VOICE 后重新运行本命令。'
+            '「声音复刻」得到音色 ID，填进 .env 的 HIKA_VOICE / AYAME_VOICE / MUGI_VOICE 后重新运行本命令。'
         )
 
     @staticmethod

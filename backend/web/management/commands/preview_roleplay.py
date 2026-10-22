@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = '离线检查实际角色上下文注入，只输出 ID/预算/计数，不输出原作或 prompt'
 
     def add_arguments(self, parser):
-        parser.add_argument('--slug', choices=['hika','ayame'], default='hika')
+        parser.add_argument('--slug', choices=['hika','ayame','mugi'], default='hika')
         parser.add_argument('--message', required=True)
         parser.add_argument('--identity-mode', choices=['real_user','protagonist'], default='real_user')
         parser.add_argument('--output')

@@ -1,0 +1,47 @@
+{
+  "slug": "mugi",
+  "api_calls": 0,
+  "messages": 3,
+  "trace": {
+    "retrieval": [
+      {
+        "channel": "lore",
+        "strategy": "sparse",
+        "status": "degraded",
+        "hit_ids": [],
+        "reason": "bundle_missing_or_empty",
+        "latency_ms": 4.065
+      },
+      {
+        "channel": "style",
+        "strategy": "sparse",
+        "status": "ok",
+        "hit_ids": [
+          "0e4be45100fd71956bfbb754",
+          "113920a374e61e566161da03",
+          "7c62f50433da4ea6cdc46243",
+          "7d2e5bf744c6c7e7bb0355fc"
+        ],
+        "latency_ms": 529.615
+      }
+    ],
+    "context": {
+      "budget": 16000,
+      "estimated_token_upper_bound": 8240,
+      "estimator": "utf8_bytes",
+      "identity": "real_user",
+      "memory_versions": {},
+      "injected_ids": {
+        "lore": [],
+        "style": [
+          "0e4be45100fd71956bfbb754",
+          "113920a374e61e566161da03",
+          "7c62f50433da4ea6cdc46243",
+          "7d2e5bf744c6c7e7bb0355fc"
+        ],
+        "memory": []
+      }
+    }
+  },
+  "notice": "只有实际注入契约，不评价真实模型效果；正文不写入报告。"
+}
