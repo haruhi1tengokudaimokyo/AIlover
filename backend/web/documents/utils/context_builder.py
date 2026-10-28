@@ -45,7 +45,7 @@ class ContextBuilder:
             for row in records:
                 if row['text'] in seen:
                     continue
-                item = {key: row.get(key) for key in ('id', 'text', 'source_file', 'source_location', 'context', 'source_message_id', 'kind', 'version')
+                item = {key: row.get(key) for key in ('id', 'text', 'source_file', 'source_location', 'context', 'source_message_id', 'kind', 'version', 'text_language', 'translation_source', 'source_game')
                         if row.get(key) is not None}
                 data[name].append(item)
                 encoded = json.dumps(data, ensure_ascii=False)

@@ -9,6 +9,56 @@ from dataclasses import dataclass
 import websockets
 
 
+class GPTSoVITSProvider:
+    """Dedicated per-role upstreams; no global weight switching across users."""
+    async def stream(self, texts, emit, voice):
+        import httpx
+        from web.character_runtime import character_route
+        slug = voice.removeprefix('trained:')
+        route = character_route(slug)
+        if not route or not voice.startswith('trained:'):
+            raise ValueError('Unknown trained voice')
+        async with httpx.AsyncClient(timeout=60, trust_env=False) as client:
+            while True:
+                item = await texts.get()
+                if item is None:
+                    return
+                wait = (time.monotonic() - item.queued_at) * 1000
+                texts.metrics['queue_wait_count'] += 1
+                texts.metrics['queue_wait_total_ms'] += wait
+                texts.metrics['queue_wait_max_ms'] = max(texts.metrics['queue_wait_max_ms'], wait)
+                response = await client.post(route['tts_url'].rstrip('/') + '/tts', json={
+                    'text': item.text, 'text_lang': 'zh', 'prompt_lang': 'ja',
+                    'prompt_text': route['reference_text'], 'ref_audio_path': route['reference_audio'],
+                    'media_type': 'wav', 'streaming_mode': False, 'batch_size': 1,
+                    'text_split_method': 'cut0', 'seed': 20261028})
+                response.raise_for_status()
+                wav = response.content
+                if len(wav) > 32 * 1024 * 1024 or not wav.startswith(b'RIFF'):
+                    raise RuntimeError('Invalid TTS audio response')
+                # Existing browser MSE player expects MP3, never relabel WAV bytes.
+                executable = os.getenv('FFMPEG_BIN')
+                if not executable:
+                    try:
+                        from imageio_ffmpeg import get_ffmpeg_exe
+                        executable = get_ffmpeg_exe()
+                    except ImportError:
+                        executable = 'ffmpeg'
+                process = await asyncio.create_subprocess_exec(executable,
+                    '-hide_banner', '-loglevel', 'error', '-i', 'pipe:0', '-f', 'mp3', 'pipe:1',
+                    stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+                try:
+                    async with asyncio.timeout(30):
+                        audio, error = await process.communicate(wav)
+                    if process.returncode or not audio:
+                        raise RuntimeError('TTS audio encoding failed')
+                finally:
+                    if process.returncode is None:
+                        process.kill()
+                        await process.wait()
+                emit({'audio': base64.b64encode(audio).decode('ascii')})
+
+
 class SentenceBuffer:
     def __init__(self, minimum=4, maximum=80):
         if not 1 <= minimum <= maximum <= 300:

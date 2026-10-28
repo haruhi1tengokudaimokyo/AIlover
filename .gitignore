@@ -55,3 +55,30 @@ extracted/chinese_patch_20261022/
 /AIlover_*中文*包_v2_*.zip
 /AIlover_全中文方案_*.md
 /AIlover_全中文方案_*.json
+finetune_data/text_v3/
+/AIlover_*_Text_V3.zip
+/AIlover_Text_Corpus_V3_Report.md
+/AIlover_Text_Corpus_V3_Review.csv
+/AIlover_Text_Corpus_V3_Checks.json
+finetune_data/tts_preparation_v1/
+finetune_data/tts_preparation_v1_audit/
+/AIlover_*TTS*V1*.zip
+/AIlover_TTS_V1_*.json
+/AIlover_TTS_V1_*.md
+
+# 天津罪本体、提取原文/原声和角色训练材料仅在本地保留。
+\[無碼\] 天津罪（アマツツミ）/
+extracted/amatsutsumi/
+extracted/characters/hotaru/
+finetune_data/hotaru/
+backend/seed_assets/hotaru/
+backend/web/documents/character_lines/hotaru.jsonl
+/AIlover_Hotaru_*.zip
+/AIlover_Hotaru_*.json
+/AIlover_Hotaru_*.md
+/训练材料/
+/训练成果/
+/runtime/
+# Local connection notes and reports containing original game excerpts.
+/scripts/autodl/REMOTE_STATUS.md
+/docs/evaluation/*hotaru*.json

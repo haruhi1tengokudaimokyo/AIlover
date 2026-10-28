@@ -49,13 +49,15 @@ def _build_tools():
 
 class ChatGraph:
     @staticmethod
-    def create_app():
+    def create_app(character_slug=None):
+        from web.character_runtime import character_route
+        route = character_route(character_slug)
         tools = _build_tools()
 
         owned_model = ChatOpenAI(
-            model=os.getenv('MODEL', 'deepseek-v3.2'),
-            openai_api_key=os.getenv('API_KEY'),
-            openai_api_base=os.getenv('API_BASE'),
+            model=route['model'] if route else os.getenv('MODEL', 'deepseek-v3.2'),
+            openai_api_key=(os.getenv('CHARACTER_MODEL_API_KEY') or 'local') if route else os.getenv('API_KEY'),
+            openai_api_base=route['api_base'] if route else os.getenv('API_BASE'),
             streaming=True,
             timeout=45,
             max_retries=1,
@@ -72,7 +74,8 @@ class ChatGraph:
                 }
             }
         )
-        llm = owned_model.bind_tools(tools)
+        # The role SFT corpus contains conversational replies, not tool-call labels.
+        llm = owned_model if route else owned_model.bind_tools(tools)
 
         class AgentState(TypedDict):
             messages: Annotated[Sequence[BaseMessage], add_messages]

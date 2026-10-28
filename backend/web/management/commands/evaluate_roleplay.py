@@ -11,7 +11,7 @@ class Command(BaseCommand):
         group = parser.add_mutually_exclusive_group()
         group.add_argument('--run', action='store_true')
         group.add_argument('--offline', action='store_true')
-        parser.add_argument('--slug', choices=['hika', 'ayame', 'mugi'], default='hika')
+        parser.add_argument('--slug', choices=['hika', 'ayame', 'mugi', 'hotaru'], default='hika')
         parser.add_argument('--case')
         parser.add_argument('--output')
         parser.add_argument('--variant', choices=['baseline', 'legacy', 'story', 'story_memory', 'all'], default='story')

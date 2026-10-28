@@ -38,7 +38,8 @@ def validate_cases(cases):
 
 def run_evaluation(command, options, graph):
     root = Path(settings.BASE_DIR) / 'evaluation'
-    cases = json.loads((root / 'roleplay_cases.json').read_text(encoding='utf-8'))['cases']
+    case_file = 'hotaru_roleplay_cases.json' if options['slug'] == 'hotaru' else 'roleplay_cases.json'
+    cases = json.loads((root / case_file).read_text(encoding='utf-8'))['cases']
     if options['include_extended']:
         cases += json.loads((root / 'roleplay_extended_cases.json').read_text(encoding='utf-8'))['cases']
     validate_cases(cases)

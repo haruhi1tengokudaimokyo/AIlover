@@ -25,6 +25,7 @@ from web.views.friend.message.leases import acquire
 from web.views.friend.message.chat.generation import Generation, register, cancel
 from web.views.friend.message.chat.voice import SentenceBuffer, SentenceQueue, CloudTTSProvider, PacketSink
 from web.documents.utils import debug_trace
+from web.character_runtime import character_route, voice_for_character
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,11 @@ def add_system_prompt(state, friend, message):
               '当作和用户已经发生的经历，关系应随实际对话发展。\n')
     prompt += '\n'.join(SystemPrompt.objects.filter(title='回复').order_by('order_number').values_list('prompt', flat=True))
     prompt += f'\n【角色卡】\n姓名：{friend.character.name}\n{friend.character.profile}\n'
+    if friend.character.slug == 'hotaru':
+        # Existing user-owned system prompts may describe the older JA-only
+        # corpora. Clarify this new source without rewriting those saved prompts.
+        prompt += '\n【本角色资料语种】风格资料含《天津罪》的中文汉化译文，原日文另存来源索引。'
+        prompt += '参考其人物表达，不把中文译文误称为日语原句，也不据此认定现实用户经历过剧情。\n'
     mode = os.getenv('ROLEPLAY_RAG_MODE', 'story')
     if mode in ('story', 'off'):
         from web.documents.utils.context_builder import ContextBuilder
@@ -89,7 +95,7 @@ def add_system_prompt(state, friend, message):
         from web.documents.utils.style_retriever import retrieve
         lines = retrieve(friend.character.slug, message, k=5)
         if lines:
-            prompt += '【台词风格参考】日语原作，用于语气参考，回复中文，不照搬剧情。\n'
+            prompt += '【台词风格参考】原作台词或汉化译文，用于语气参考，回复中文，不照搬剧情。\n'
             prompt += '\n'.join(f'・{text}' for text in lines)
     memory_data = [HumanMessage(json.dumps({'memory': memories}, ensure_ascii=False))] if memories else []
     return {'messages': [SystemMessage(prompt)] + memory_data + [m for m in state['messages'] if not isinstance(m, SystemMessage)]}
@@ -128,7 +134,11 @@ class MessageChatView(APIView):
         friend = Friend.objects.select_related('character').filter(pk=friend_id, me__user=request.user).first()
         if not friend:
             return Response({'result': '好友不存在'}, status=404)
-        if not os.getenv('API_KEY', '').strip():
+        try:
+            route = character_route(friend.character.slug)
+        except (OSError, ValueError, KeyError):
+            return Response({'result': '角色模型配置不可用，请检查本地模型服务配置'}, status=503)
+        if not route and not os.getenv('API_KEY', '').strip():
             return Response({'result': '尚未配置模型密钥，请在 .env 中填写 API_KEY'}, status=503)
         lease = acquire(friend.pk)
         if lease is None:
@@ -141,7 +151,7 @@ class MessageChatView(APIView):
             return Response({'result': '生成标识重复，请使用新标识重试'}, status=409)
         try:
             friend.refresh_from_db()
-            app = ChatGraph.create_app()
+            app = ChatGraph.create_app(friend.character.slug) if route else ChatGraph.create_app()
             inputs = add_recent_messages({'messages': [SystemMessage(''), HumanMessage(message.strip())]}, friend)
             inputs = add_system_prompt(inputs, friend, message.strip())
             inputs.setdefault('trace', {}).update(request_id=uuid.uuid4().hex, character=friend.character.slug)
@@ -183,7 +193,8 @@ class MessageChatView(APIView):
             texts.metrics['model_ms'] = (time.monotonic() - started) * 1000
 
     async def stream_voice(self, texts, mq, voice):
-        provider = getattr(self, 'tts_provider', None) or CloudTTSProvider()
+        from web.views.friend.message.chat.voice import GPTSoVITSProvider
+        provider = getattr(self, 'tts_provider', None) or (GPTSoVITSProvider() if voice.startswith('trained:') else CloudTTSProvider())
         await provider.stream(texts, mq.put, voice)
 
     async def run_tasks(self, app, inputs, mq, voice, audio, stopped, generation=None):
@@ -257,7 +268,7 @@ class MessageChatView(APIView):
     def event_stream(self, app, inputs, friend, message, audio=True, lease=None, generation=None):
         generation = generation or Generation(friend.pk, str(uuid.uuid4()), lease)
         mq, stopped = Queue(), generation.stopped
-        voice = friend.character.voice or os.getenv('TTS_VOICE', 'longanyang')
+        voice = voice_for_character(friend.character)
         if not generation.activate():
             generation.finish()
             generation.close_stream()

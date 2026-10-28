@@ -22,5 +22,13 @@
     "theme_color": "#b4a4d9",
     "display_ready": true,
     "source": "Local game layers; scripts/prepare_game_stage.py; assets excluded from Git"
+  },
+  "hotaru": {
+    "url": "/media/character/stage/hotaru-portrait.webp",
+    "photo_url": "/media/character/stage/hotaru-avatar.webp",
+    "background_url": "/media/character/stage/hotaru-background.webp",
+    "theme_color": "#966473",
+    "display_ready": true,
+    "source": "Local Amatsutsumi CMVS game assets; scripts/prepare_hotaru_assets.py; output provenance: media/character/stage/hotaru-provenance.json"
   }
 }

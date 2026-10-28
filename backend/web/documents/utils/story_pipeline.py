@@ -11,9 +11,10 @@ from pathlib import Path
 
 ALIASES = {'緋華': 'hika', '佐藤緋華': 'hika', '绯华': 'hika',
            '菖蒲': 'ayame', '藤ヶ丘菖蒲': 'ayame',
-           'むぎ': 'mugi', '麦': 'mugi', '小麦': 'mugi'}
-# The alias set is part of parsed records; old caches lack mugi's identity.
-PARSER_VERSION = 2
+           'むぎ': 'mugi', '麦': 'mugi', '小麦': 'mugi',
+           '水無月ほたる': 'hotaru', '水无月萤': 'hotaru', '水無月蛍': 'hotaru', 'ほたる': 'hotaru', '萤': 'hotaru'}
+# Alias changes must invalidate parser caches used by future rebuilds.
+PARSER_VERSION = 3
 CONTROL = {'if', 'else', 'elsif', 'endif', 'eval', 'c', 'r', 'hh',
            'layopt', 'jump', 'call', 'return', 'icHeart'}
 TAG = re.compile(r'\[([^\]]+)\]')
