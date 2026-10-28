@@ -54,27 +54,33 @@ class ChatGraph:
         route = character_route(character_slug)
         tools = _build_tools()
 
-        owned_model = ChatOpenAI(
-            model=route['model'] if route else os.getenv('MODEL', 'deepseek-v3.2'),
-            openai_api_key=(os.getenv('CHARACTER_MODEL_API_KEY') or 'local') if route else os.getenv('API_KEY'),
-            openai_api_base=route['api_base'] if route else os.getenv('API_BASE'),
-            streaming=True,
-            timeout=45,
-            max_retries=1,
-            max_tokens=1000,
-            # 角色扮演场景：略高的温度让回复更有「人味」，
-            # 频率惩罚抑制复读与套话（原来默认全为 0，容易复读）
-            temperature=float(os.getenv('LLM_TEMPERATURE', '0.95')),
-            top_p=float(os.getenv('LLM_TOP_P', '0.9')),
-            frequency_penalty=float(os.getenv('LLM_FREQUENCY_PENALTY', '0.4')),
-            presence_penalty=float(os.getenv('LLM_PRESENCE_PENALTY', '0.3')),
-            model_kwargs={
-                "stream_options": {
-                    "include_usage": True,  # 输出token消耗数量
+        if route and route.get('provider') == 'dashscope':
+            from web.cloud_models import DashScopeCustomChat
+            owned_model = DashScopeCustomChat(model_id=route['model'],
+                key_env=route.get('key_env', 'DASHSCOPE_API_KEY'))
+        else:
+            from web.cloud_models import secret
+            owned_model = ChatOpenAI(
+                model=route['model'] if route else os.getenv('MODEL', 'deepseek-v3.2'),
+                openai_api_key=(secret(route['key_env']) if route.get('key_env') else os.getenv('CHARACTER_MODEL_API_KEY', 'local')) if route else os.getenv('API_KEY'),
+                openai_api_base=route['api_base'] if route else os.getenv('API_BASE'),
+                streaming=True,
+                default_headers={'X-AILOVER-Key': secret(route['gateway_secret_env'])} if route and route.get('gateway_secret_env') else None,
+                timeout=45,
+                max_retries=0 if route else 1,
+                max_tokens=1000,
+                # 角色扮演场景：略高的温度让回复更有「人味」，
+                # 频率惩罚抑制复读与套话（原来默认全为 0，容易复读）
+                temperature=float(os.getenv('LLM_TEMPERATURE', '0.95')),
+                top_p=float(os.getenv('LLM_TOP_P', '0.9')),
+                frequency_penalty=float(os.getenv('LLM_FREQUENCY_PENALTY', '0.4')),
+                presence_penalty=float(os.getenv('LLM_PRESENCE_PENALTY', '0.3')),
+                model_kwargs={
+                    "stream_options": {
+                        "include_usage": True,  # 输出token消耗数量
+                    }
                 }
-            }
-        )
-        # The role SFT corpus contains conversational replies, not tool-call labels.
+            )
         llm = owned_model if route else owned_model.bind_tools(tools)
 
         class AgentState(TypedDict):

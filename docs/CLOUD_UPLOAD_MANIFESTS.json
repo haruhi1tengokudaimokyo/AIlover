@@ -1,0 +1,30 @@
+{
+  "compatibility.json": {
+    "bytes": 15034,
+    "sha256": "73c0c8baeaa8f68557840cd72d45f63f1e1badfe63090843c410e77f92475e46"
+  },
+  "verification.json": {
+    "bytes": 843,
+    "sha256": "b3b19033b3799830feb5b7cad9a521a36cd47dd98520b46e45d8399377b0364f"
+  },
+  "runpod-tts/SHA256.json": {
+    "bytes": 5093,
+    "sha256": "329ad88cdcea5552ce234895bb3cc69e8cb8bc20525f77d1993430fd09452d5f"
+  },
+  "oss/ayame/SHA256.json": {
+    "bytes": 283,
+    "sha256": "3cc1ffcd3a54063db57c7c5e543e0c1b1d8b31cbb51f2062add406f675ad6f7e"
+  },
+  "oss/hika/SHA256.json": {
+    "bytes": 283,
+    "sha256": "bbe28c2b8851a463ac2c00f931d092988861704a39a18ec4090ea9d814287e31"
+  },
+  "oss/hotaru/SHA256.json": {
+    "bytes": 283,
+    "sha256": "df2c40edfa962ca0efa8e3d634bb4354667fd3fd8e410872458dc76ca8a68410"
+  },
+  "oss/mugi/SHA256.json": {
+    "bytes": 283,
+    "sha256": "58b32e2bf6b9ec4c5abb9f176135f954c9fca3ab14bd9d528d14ea99c9eb941c"
+  }
+}

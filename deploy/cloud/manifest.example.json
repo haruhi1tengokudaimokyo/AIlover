@@ -1,0 +1,44 @@
+{
+  "characters": {
+    "hika": {
+      "provider": "dashscope",
+      "model": "REPLACE_BAILIAN_HIKA_MODEL_ID",
+      "api_base": "https://dashscope.aliyuncs.com",
+      "key_env": "DASHSCOPE_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET"
+    },
+    "ayame": {
+      "provider": "dashscope",
+      "model": "REPLACE_BAILIAN_AYAME_MODEL_ID",
+      "api_base": "https://dashscope.aliyuncs.com",
+      "key_env": "DASHSCOPE_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET"
+    },
+    "mugi": {
+      "provider": "dashscope",
+      "model": "REPLACE_BAILIAN_MUGI_MODEL_ID",
+      "api_base": "https://dashscope.aliyuncs.com",
+      "key_env": "DASHSCOPE_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET"
+    },
+    "hotaru": {
+      "provider": "dashscope",
+      "model": "REPLACE_BAILIAN_HOTARU_MODEL_ID",
+      "api_base": "https://dashscope.aliyuncs.com",
+      "key_env": "DASHSCOPE_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET"
+    }
+  }
+}

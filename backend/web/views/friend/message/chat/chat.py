@@ -194,13 +194,15 @@ class MessageChatView(APIView):
 
     async def stream_voice(self, texts, mq, voice):
         from web.views.friend.message.chat.voice import GPTSoVITSProvider
-        provider = getattr(self, 'tts_provider', None) or (GPTSoVITSProvider() if voice.startswith('trained:') else CloudTTSProvider())
+        route = character_route(voice.removeprefix('trained:')) if voice.startswith('trained:') else None
+        from web.cloud_models import RunPodVoiceProvider
+        provider = getattr(self, 'tts_provider', None) or (RunPodVoiceProvider() if route and route.get('tts_provider') == 'runpod' else GPTSoVITSProvider() if route else CloudTTSProvider())
         await provider.stream(texts, mq.put, voice)
 
     async def run_tasks(self, app, inputs, mq, voice, audio, stopped, generation=None):
         metrics = generation.metrics if generation else Generation(None, '').metrics
         mq = PacketSink(mq, metrics, generation.created if generation else time.monotonic(), generation.id if generation else None)
-        audio_enabled = audio and os.getenv('TTS_ENABLED', 'true').lower() == 'true'
+        audio_enabled = audio and bool(voice) and os.getenv('TTS_ENABLED', 'true').lower() == 'true'
         texts = SentenceQueue(metrics, enabled=audio_enabled, maximum=max(1, min(128, int(os.getenv('TTS_QUEUE_LIMIT', '32')))))
 
         async def safe_voice():
@@ -222,7 +224,7 @@ class MessageChatView(APIView):
         if audio_enabled:
             tasks.append(asyncio.create_task(safe_voice()))
         try:
-            async with asyncio.timeout(120):
+            async with asyncio.timeout(float(os.getenv('GENERATION_TIMEOUT_SECONDS', '120'))):
                 while not all(task.done() for task in tasks):
                     if stopped.is_set():
                         return
@@ -287,7 +289,7 @@ class MessageChatView(APIView):
         output, usage, failed = '', {}, False
         started, first_token, first_audio = time.monotonic(), None, None
         try:
-            yield f'data: {json.dumps({"event": "start", "generation_id": generation.id, "audio_enabled": audio and os.getenv("TTS_ENABLED", "true").lower() == "true"})}\n\n'
+            yield f'data: {json.dumps({"event": "start", "generation_id": generation.id, "audio_enabled": audio and bool(voice) and os.getenv("TTS_ENABLED", "true").lower() == "true"})}\n\n'
             if settings.DEBUG and os.getenv('ROLEPLAY_DEBUG_TRACE', 'false').lower() == 'true':
                 yield f'data: {json.dumps({"trace": inputs.get("trace", {}), "generation_id": generation.id}, ensure_ascii=False)}\n\n'
             while True:

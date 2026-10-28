@@ -1,0 +1,48 @@
+{
+  "characters": {
+    "hika": {
+      "provider": "openai",
+      "model": "ailover-hika",
+      "api_base": "https://REPLACE_TEXT_ENDPOINT_ID.api.runpod.ai/v1",
+      "key_env": "RUNPOD_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET",
+      "gateway_secret_env": "RUNPOD_TEXT_SECRET"
+    },
+    "ayame": {
+      "provider": "openai",
+      "model": "ailover-ayame",
+      "api_base": "https://REPLACE_TEXT_ENDPOINT_ID.api.runpod.ai/v1",
+      "key_env": "RUNPOD_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET",
+      "gateway_secret_env": "RUNPOD_TEXT_SECRET"
+    },
+    "mugi": {
+      "provider": "openai",
+      "model": "ailover-mugi",
+      "api_base": "https://REPLACE_TEXT_ENDPOINT_ID.api.runpod.ai/v1",
+      "key_env": "RUNPOD_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET",
+      "gateway_secret_env": "RUNPOD_TEXT_SECRET"
+    },
+    "hotaru": {
+      "provider": "openai",
+      "model": "ailover-hotaru",
+      "api_base": "https://REPLACE_TEXT_ENDPOINT_ID.api.runpod.ai/v1",
+      "key_env": "RUNPOD_API_KEY",
+      "tts_provider": "runpod",
+      "runpod_endpoint_id": "REPLACE_TTS_ENDPOINT_ID",
+      "tts_key_env": "RUNPOD_API_KEY",
+      "worker_secret_env": "RUNPOD_WORKER_SECRET",
+      "gateway_secret_env": "RUNPOD_TEXT_SECRET"
+    }
+  }
+}

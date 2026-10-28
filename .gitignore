@@ -20,6 +20,7 @@ backend/lancedb_style/
 backend/backups/
 backend/evaluations/
 dist/
+/AIlover启动.exe
 share/
 # Local provenance bundles contain copyrighted script text; never publish automatically.
 backend/story_data/

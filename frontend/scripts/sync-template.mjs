@@ -21,7 +21,7 @@ if (!jsMatch || !cssMatch) {
 }
 
 html = html.replace(
-  /(src|href)="\/(assets\/[^"]+|favicon\.ico)"/g,
+  /(src|href)="\/(?:static\/frontend\/)?(assets\/[^"]+|favicon\.ico)"/g,
   (_match, attr, assetPath) => `${attr}="{% static 'frontend/${assetPath}' %}"`,
 )
 

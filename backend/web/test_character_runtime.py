@@ -37,6 +37,16 @@ class TrainedRoutingTests(SimpleTestCase):
             self.assertIsNone(character_route('mugi'))
             self.assertEqual(voice_for_character(SimpleNamespace(slug='mugi', voice='generic')), 'generic')
 
+    def test_text_only_remote_route_does_not_require_or_call_gpu_voice(self):
+        data = json.loads(self.path.read_text())
+        for route in data['characters'].values():
+            route.pop('tts_url')
+            route['tts_provider'] = 'disabled'
+        self.path.write_text(json.dumps(data))
+        for role in ('hika', 'ayame', 'mugi', 'hotaru'):
+            self.assertEqual(character_route(role)['model'], 'ailover-' + role)
+            self.assertEqual(voice_for_character(SimpleNamespace(slug=role, voice='generic')), '')
+
     def test_invalid_manifest_does_not_silently_use_another_role(self):
         self.path.write_text('{}')
         with self.assertRaises(KeyError):

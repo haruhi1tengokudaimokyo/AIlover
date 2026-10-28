@@ -13,7 +13,7 @@ const SettingsIndex = () => import('@/views/settings/SettingsIndex.vue')
 
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/'),
   routes: [
     { path: '/chat/:friendId', name: 'chat-workspace', component: () => import('@/views/friend/ChatWorkspace.vue'), meta: { needLogin: true } },
     { path: '/settings/', component: SettingsIndex, name: 'settings-index', meta: { needLogin: true } },

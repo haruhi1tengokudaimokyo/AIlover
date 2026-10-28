@@ -160,6 +160,8 @@ def main():
         print('服务启动超时，请查看日志。')
         sys.exit(1)
 
+    print(f'AIlover 服务已启动: {url}', flush=True)
+
     if '--no-window' in sys.argv:
         # 无窗口模式（调试/测试用）：只起服务，保持进程存活
         print(f'服务已启动: {url}（--no-window 模式，Ctrl+C 退出）')

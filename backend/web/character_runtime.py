@@ -13,10 +13,13 @@ def character_route(slug):
     path = Path(os.getenv('CHARACTER_MODELS_MANIFEST', str(Path(settings.BASE_DIR).parent / 'runtime/manifest.json')))
     data = json.loads(path.read_text(encoding='utf-8'))
     route = data['characters'][slug]
-    if not route.get('model') or not route.get('api_base') or not route.get('tts_url'):
+    if not route.get('model') or not route.get('api_base') or not (route.get('tts_url') or route.get('runpod_endpoint_id') or route.get('tts_provider') == 'disabled'):
         raise ValueError('Incomplete trained character route')
     return route
 
 
 def voice_for_character(character):
-    return 'trained:' + character.slug if character_route(character.slug) else character.voice or os.getenv('TTS_VOICE', 'longanyang')
+    route = character_route(character.slug)
+    if route and route.get('tts_provider') == 'disabled':
+        return ''
+    return 'trained:' + character.slug if route else character.voice or os.getenv('TTS_VOICE', 'longanyang')
